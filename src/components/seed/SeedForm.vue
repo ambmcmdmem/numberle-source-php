@@ -10,7 +10,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import axios from 'axios';
-import { apiPort } from '../../apiInformation';
+import { apiPort } from '../../api/apiInformation';
 
 const ensure = <T>(argument: T | undefined | null): T => {
   if (argument === undefined || argument === null)
@@ -35,7 +35,6 @@ export default defineComponent({
         error: 'シード値を整数としてください。',
       },
     ];
-
     const seedError = computed((): string =>
       validationAndErrors.some(doesFallForValidation)
         ? ensure(validationAndErrors.find(doesFallForValidation)).error
@@ -43,18 +42,23 @@ export default defineComponent({
     );
 
     const sendSeed = (): void => {
+      if (seedError.value) return;
+
       axios
         .post(
           'http://localhost:' + apiPort + '/setAnswer/',
           new URLSearchParams({
-            seed: String(seed),
+            seed: String(seed.value),
           }),
           {
             withCredentials: false,
           }
         )
-        .then((response) => {})
-        .catch((error) => console.log('error:', error));
+        .then((response) => {
+          console.log(String(seed.value));
+          console.log(response);
+        })
+        .catch((error) => console.log(error));
     };
 
     return {

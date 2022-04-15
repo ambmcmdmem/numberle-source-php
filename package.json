@@ -19,6 +19,7 @@
     "@types/express": "^4.17.13",
     "@types/webpack": "^5.28.0",
     "axios": "^0.26.1",
+    "body-parser": "^1.20.0",
     "css-loader": "^6.7.1",
     "express": "^4.17.3",
     "jest": "^27.5.1",
