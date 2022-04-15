@@ -24,4 +24,7 @@ module.exports = {
     ],
   },
   plugins: [new VueLoaderPlugin()],
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
 };
