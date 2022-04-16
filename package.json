@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile:sass": "node-sass ./style/scss/index.scss ./style/css/index.css"
+    "compile:scss": "node-sass ./style/scss/index.scss ./style/css/index.css"
   },
   "author": "Daiki Yamamoto <d.yamamoto@xxxaz.jp> (https://github.com/ambmcmdmem)",
   "license": "ISC",
@@ -23,6 +23,7 @@
     "css-loader": "^6.7.1",
     "express": "^4.17.3",
     "jest": "^27.5.1",
+    "mitt": "^3.0.0",
     "node-sass": "^7.0.1",
     "sass": "^1.50.0",
     "sass-loader": "^12.6.0",

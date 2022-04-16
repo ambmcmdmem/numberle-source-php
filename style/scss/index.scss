@@ -1,3 +1,14 @@
 .error {
   color: red;
 }
+.character {
+  &.correct {
+    background-color: green;
+  }
+  &.differentLocation {
+    background-color: yellow;
+  }
+  &.wrong {
+    background-color: gray;
+  }
+}
