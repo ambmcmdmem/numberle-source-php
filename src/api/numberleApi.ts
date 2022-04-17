@@ -1,7 +1,7 @@
 import express from 'express';
 import { apiPort } from './apiInformation';
 import bodyParser from 'body-parser';
-import Hash from '../modules/Hash';
+import Collation from '../modules/Collation';
 const server = express();
 // Answerはサーバー側で抱え込まない
 
@@ -13,21 +13,18 @@ server.post('/collation', (request, response): void => {
   response.set({
     'Access-Control-Allow-Origin': 'http://localhost:3000',
   });
-  const hash = new Hash(request.body.seed);
-  const answer = hash
-    .shuffle([...Array(10).keys()])
-    .slice(0, 5)
-    .join('');
-  const statusOfProposedSolution = [...request.body.proposedSolution].map(
-    (proposedSolutionCharacter, proposedSolutionCharacterNo) => {
-      if (
-        proposedSolutionCharacter === answer.charAt(proposedSolutionCharacterNo)
-      )
-        return 'correct';
-      else if (answer.includes(proposedSolutionCharacter))
-        return 'differentLocation';
-      else return 'wrong';
-    }
+  const collation = new Collation(request.body.seed);
+  const statusOfProposedSolution = collation.statusOfProposedSolution(
+    request.body.proposedSolution
   );
   response.send(statusOfProposedSolution);
+});
+
+server.post('/getAnswer', (request, response): void => {
+  response.set({
+    'Access-Control-Allow-Origin': 'http://localhost:3000',
+  });
+  const collation = new Collation(request.body.seed);
+  const answer = collation.getAnswer();
+  response.send(answer);
 });

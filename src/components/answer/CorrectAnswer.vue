@@ -1,12 +1,23 @@
 <template>
-  <div>CorrectAnswer</div>
+  <div v-if="answer">{{ answer }}</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { emitter } from '../../modules/emitter';
 
 export default defineComponent({
-  setup() {},
+  setup() {
+    const answer = ref<number | null>(null);
+
+    emitter.on('answerIsGiven', (givenAnswer: unknown) => {
+      answer.value = Number(givenAnswer);
+    });
+
+    return {
+      answer,
+    };
+  },
 });
 </script>
 
