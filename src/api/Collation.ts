@@ -4,6 +4,7 @@ import {
 } from '../modules/numberleModule';
 
 type ConsistingOf4<T> = [T, T, T, T];
+
 export default class Collation {
   private forCreatingHash: ConsistingOf4<number>;
   private answer: string;

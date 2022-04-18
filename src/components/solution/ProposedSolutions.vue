@@ -1,5 +1,5 @@
 <template>
-  <div v-if="seed">
+  <div v-if="seed" class="w-75 h-75 d-flex flex-column justify-content-between">
     <ProposedSolution
       v-for="proposedSolutionNo in maxNumberOfTries"
       :key="`proposedSolution${proposedSolutionNo - 1}`"

@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex justify-content-around">
     <Character
       v-for="characterNo in maxNumberOfInput"
       :key="`character${characterNo - 1}`"
