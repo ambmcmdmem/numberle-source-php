@@ -1,5 +1,7 @@
-import { maxNumberOfInput } from './numberleModule';
-import { StatusOfProposedSolutionType } from './numberleModule';
+import {
+  maxNumberOfInput,
+  StatusOfProposedSolutionType,
+} from '../modules/numberleModule';
 
 type ConsistingOf4<T> = [T, T, T, T];
 export default class Collation {
@@ -8,7 +10,8 @@ export default class Collation {
 
   constructor(seed: number) {
     this.forCreatingHash = [31415926535, 8979323846, 2643383279, seed];
-    [...Array(seed % 7).keys()].forEach(() => this.setNextHash());
+    [...Array(seed % 7).keys()].forEach((): void => this.setNextHash());
+
     this.answer = this.shuffle([...Array(10).keys()])
       .slice(0, maxNumberOfInput)
       .join('');
@@ -26,12 +29,12 @@ export default class Collation {
   }
   private nextHash(): number {
     this.setNextHash();
-    return this.forCreatingHash[3];
+    return this.forCreatingHash.slice(-1)[0];
   }
 
   private shuffle<T>(target: T[]): T[] {
     [...Array(target.length).keys()]
-      .filter((i): boolean => i !== 0)
+      .filter((targetNo): boolean => targetNo !== 0)
       .reverse()
       .forEach((i): void => {
         const j = Math.floor((Math.abs(this.nextHash()) % 2) * (i + 1));
@@ -41,6 +44,8 @@ export default class Collation {
   }
 
   public getAnswer(): string {
+    if (this.answer.length !== maxNumberOfInput)
+      throw new Error('回答の文字列長が指定されたものと一致しません。');
     return this.answer;
   }
 
@@ -51,10 +56,7 @@ export default class Collation {
       throw new Error('提示された文字列長と回答の文字列長が異なります。');
 
     return [...proposedSolution].map(
-      (
-        proposedSolutionCharacter,
-        proposedSolutionCharacterNo
-      ): StatusOfProposedSolutionType => {
+      (proposedSolutionCharacter, proposedSolutionCharacterNo) => {
         if (
           proposedSolutionCharacter ===
           this.answer.charAt(proposedSolutionCharacterNo)

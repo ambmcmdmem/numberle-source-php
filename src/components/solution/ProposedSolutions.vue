@@ -17,6 +17,7 @@ import {
   maxNumberOfInput,
   maxNumberOfTries,
   StatusOfProposedSolutionType,
+  apiCheckDigit,
 } from '../../modules/numberleModule';
 import ProposedSolution from './ProposedSolution.vue';
 import axios from 'axios';
@@ -27,9 +28,12 @@ export default defineComponent({
   components: {
     ProposedSolution,
   },
-  setup() {
+  props: {
+    seed: Number,
+  },
+  setup(props) {
     axios.defaults.withCredentials = false;
-    const seed = ref<number | null>(null);
+
     const numberOfTries = ref(1);
     const proposedSolutions = ref<string[][]>(
       [...Array(maxNumberOfTries)].map((): string[] => [])
@@ -38,7 +42,7 @@ export default defineComponent({
       (): string[] => proposedSolutions.value[numberOfTries.value - 1]
     );
     const statusOfProposedSolutions = ref<StatusOfProposedSolutionType[][]>(
-      [...Array(maxNumberOfTries)].map((): StatusOfProposedSolutionType[] => [])
+      [...Array(maxNumberOfTries)].map(() => [])
     );
     const nowStatusOfProposedSolutions = computed({
       get: (): StatusOfProposedSolutionType[] =>
@@ -55,13 +59,17 @@ export default defineComponent({
           statusOfProposedSolution === 'correct'
       )
     );
+    const parametersAboutSeed = computed(() => {
+      if (props.seed === undefined)
+        throw new Error('シード入力後ですがシードが空です。');
+      return {
+        seed: String(props.seed),
+        checkDigit: String(apiCheckDigit(props.seed)),
+      };
+    });
 
     onMounted(() => {
-      emitter.on('seedIsSet', (setSeed: unknown): void => {
-        seed.value = Number(setSeed);
-      });
       window.addEventListener('keydown', (event): void => {
-        if (!seed.value) return;
         if (
           !isNaN(Number(event.key)) &&
           nowProposedSolution.value.length < maxNumberOfInput
@@ -77,8 +85,8 @@ export default defineComponent({
             .post(
               `http://localhost:${apiPort}/collation`,
               new URLSearchParams({
-                seed: String(seed.value),
-                proposedSolution: nowProposedSolution.value.join(''),
+                ...parametersAboutSeed.value,
+                ...{ proposedSolution: nowProposedSolution.value.join('') },
               })
             )
             .then((response): void => {
@@ -91,12 +99,10 @@ export default defineComponent({
                 axios
                   .post(
                     `http://localhost:${apiPort}/getAnswer`,
-                    new URLSearchParams({
-                      seed: String(seed.value),
-                    })
+                    new URLSearchParams(parametersAboutSeed.value)
                   )
                   .then((response): void =>
-                    emitter.emit('answerIsSent', response.data)
+                    emitter.emit('correctAnswerIsSent', String(response.data))
                   )
                   .catch((error): void => console.log(error));
               } else {
@@ -109,7 +115,6 @@ export default defineComponent({
     });
 
     return {
-      seed,
       maxNumberOfTries,
       proposedSolutions,
       statusOfProposedSolutions,

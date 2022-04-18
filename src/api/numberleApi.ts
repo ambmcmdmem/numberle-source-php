@@ -1,12 +1,18 @@
 import express from 'express';
 import { apiPort } from './apiInformation';
 import bodyParser from 'body-parser';
-import Collation from '../modules/Collation';
+import Collation from './Collation';
+import { apiCheckDigit } from '../modules/numberleModule';
 const server = express();
 
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
-server.use((_, response, next): void => {
+server.use((request, response, next): void => {
+  if (
+    apiCheckDigit(Number(request.body.seed)) !== Number(request.body.checkDigit)
+  )
+    return;
+
   response.set({
     'Access-Control-Allow-Origin': 'http://localhost:3000',
   });
@@ -15,15 +21,13 @@ server.use((_, response, next): void => {
 
 server.listen(apiPort);
 server.post('/collation', (request, response): void => {
-  const collation = new Collation(request.body.seed);
-  const statusOfProposedSolution = collation.statusOfProposedSolution(
-    request.body.proposedSolution
+  response.send(
+    new Collation(request.body.seed).statusOfProposedSolution(
+      request.body.proposedSolution
+    )
   );
-  response.send(statusOfProposedSolution);
 });
 
 server.post('/getAnswer', (request, response): void => {
-  const collation = new Collation(request.body.seed);
-  const answer = collation.getAnswer();
-  response.send(answer);
+  response.send(new Collation(request.body.seed).getAnswer());
 });

@@ -1,8 +1,10 @@
 <template>
   <div class="appContainer toCenter">
-    <SeedForm v-if="!seedInputToken"></SeedForm>
-    <ProposedSolutions v-show="seedInputToken"></ProposedSolutions>
-    <CorrectAnswer v-if="seedInputToken"></CorrectAnswer>
+    <SeedForm v-if="!seed"></SeedForm>
+    <template v-else>
+      <ProposedSolutions :seed="seed"></ProposedSolutions>
+      <CorrectAnswer></CorrectAnswer>
+    </template>
   </div>
 </template>
 
@@ -20,16 +22,16 @@ export default defineComponent({
     CorrectAnswer,
   },
   setup() {
-    const seedInputToken = ref(false);
+    const seed = ref<number | null>(null);
 
     onMounted(() => {
-      emitter.on('seedIsSet', (): void => {
-        seedInputToken.value = true;
+      emitter.on('seedIsSet', (setSeed): void => {
+        seed.value = setSeed;
       });
     });
 
     return {
-      seedInputToken,
+      seed,
     };
   },
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex">
     <Character
-      v-for="characterNo of maxNumberOfInput"
+      v-for="characterNo in maxNumberOfInput"
       :key="`character${characterNo - 1}`"
       :character="proposedSolution[characterNo - 1] ?? ''"
       :statusOfCharacter="statusOfProposedSolution[characterNo - 1] ?? ''"

@@ -1,3 +1,7 @@
 import mitt from 'mitt';
 
-export const emitter = mitt();
+type EventsType = {
+  seedIsSet: number;
+  correctAnswerIsSent: string;
+};
+export const emitter = mitt<EventsType>();

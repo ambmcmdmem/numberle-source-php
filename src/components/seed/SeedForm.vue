@@ -1,8 +1,8 @@
 <template>
   <div class="text-center toCenter">
-    <div class="mb-1">シード値(数値)を入力してください</div>
-    <span v-if="seedError" class="error">{{ seedError }}</span>
-    <input type="number" v-model="seed" />
+    <div class="mb-1">シード値(0以上の整数)を入力してください。</div>
+    <span v-if="seedError && isInput" class="error">{{ seedError }}</span>
+    <input type="number" v-model="seed" min="1" @input="isInput = true" />
     <button class="mt-3" type="button" @click="sendSeed">SUBMIT</button>
   </div>
 </template>
@@ -13,7 +13,7 @@ import { emitter } from '../../modules/emitter';
 
 const ensure = <T>(argument: T | undefined | null): T => {
   if (argument === undefined || argument === null)
-    throw new Error('引数がnullもしくはundefinedになっています。');
+    throw new Error('ensureの引数がnullもしくはundefinedになっています。');
 
   return argument;
 };
@@ -23,6 +23,7 @@ const doesFallForValidation = (target: {
 
 export default defineComponent({
   setup() {
+    const isInput = ref(false);
     const seed = ref<number | ''>('');
     const validationAndErrors = [
       {
@@ -42,7 +43,10 @@ export default defineComponent({
     );
 
     const sendSeed = (): void => {
-      if (seedError.value) return;
+      if (seedError.value || typeof seed.value !== 'number') {
+        isInput.value = true;
+        return;
+      }
 
       emitter.emit('seedIsSet', seed.value);
     };
@@ -51,6 +55,7 @@ export default defineComponent({
       seed,
       sendSeed,
       seedError,
+      isInput,
     };
   },
 });
