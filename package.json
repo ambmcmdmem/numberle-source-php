@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "compile:scss": "node-sass ./style/scss/index.scss ./style/css/index.css"
+    "compile:scss": "node-sass ./style/scss/index.scss ./style/css/index.css",
+    "test": "jest"
   },
   "author": "Daiki Yamamoto <d.yamamoto@xxxaz.jp> (https://github.com/ambmcmdmem)",
   "license": "ISC",
@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/jest": "^27.4.1",
     "@types/webpack": "^5.28.0",
     "axios": "^0.26.1",
     "body-parser": "^1.20.0",
@@ -27,6 +28,7 @@
     "node-sass": "^7.0.1",
     "sass": "^1.50.0",
     "sass-loader": "^12.6.0",
+    "ts-jest": "^27.1.4",
     "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3",

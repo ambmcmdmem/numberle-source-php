@@ -10,14 +10,17 @@
 .character {
   border: 1px solid #000;
   height: 60px;
-  width: 40px;
+  width: 50px;
   &.correct {
     background-color: green;
+    color: white;
   }
   &.differentLocation {
-    background-color: yellow;
+    background-color: orange;
+    color: white;
   }
   &.wrong {
     background-color: gray;
+    color: white;
   }
 }

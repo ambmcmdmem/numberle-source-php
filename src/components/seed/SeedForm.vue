@@ -30,8 +30,9 @@ export default defineComponent({
         error: 'シード値を入力してください。',
       },
       {
-        validation: () => Number.isInteger(seed.value),
-        error: 'シード値を整数としてください。',
+        validation: () =>
+          Number.isInteger(seed.value) && Number(seed.value) > 0,
+        error: 'シード値は0より大きい整数としてください。',
       },
     ];
     const seedError = computed((): string =>
