@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="appContainer toCenter">
     <SeedForm v-if="!seedInputToken"></SeedForm>
     <ProposedSolutions v-show="seedInputToken"></ProposedSolutions>
     <CorrectAnswer v-if="seedInputToken"></CorrectAnswer>
@@ -34,3 +34,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+.appContainer {
+  height: 100vh;
+}
+</style>

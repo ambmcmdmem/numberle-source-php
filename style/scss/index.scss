@@ -1,7 +1,16 @@
 .error {
   color: red;
 }
+.toCenter {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
 .character {
+  border: 1px solid #000;
+  height: 60px;
+  width: 40px;
   &.correct {
     background-color: green;
   }

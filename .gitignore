@@ -2,3 +2,4 @@ node_modules
 dist
 style/css
 .gitignore
+test

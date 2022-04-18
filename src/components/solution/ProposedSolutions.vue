@@ -2,7 +2,7 @@
   <div v-if="seed">
     <ProposedSolution
       v-for="proposedSolutionNo in maxNumberOfTries"
-      :key="`proposedSolution${proposedSolutionNo}`"
+      :key="`proposedSolution${proposedSolutionNo - 1}`"
       :proposedSolution="proposedSolutions[proposedSolutionNo - 1]"
       :statusOfProposedSolution="
         statusOfProposedSolutions[proposedSolutionNo - 1]
@@ -28,16 +28,29 @@ export default defineComponent({
     ProposedSolution,
   },
   setup() {
+    axios.defaults.withCredentials = false;
     const seed = ref<number | null>(null);
     const numberOfTries = ref(1);
     const proposedSolutions = ref<string[][]>(
-      [...Array(maxNumberOfTries)].map(() => [])
+      [...Array(maxNumberOfTries)].map((): string[] => [])
+    );
+    const nowProposedSolution = computed(
+      (): string[] => proposedSolutions.value[numberOfTries.value - 1]
     );
     const statusOfProposedSolutions = ref<StatusOfProposedSolutionType[][]>(
-      [...Array(maxNumberOfTries)].map(() => [])
+      [...Array(maxNumberOfTries)].map((): StatusOfProposedSolutionType[] => [])
     );
+    const nowStatusOfProposedSolutions = computed({
+      get: (): StatusOfProposedSolutionType[] =>
+        statusOfProposedSolutions.value[numberOfTries.value - 1],
+      set: (
+        givenStatusOfProposedSolutions: StatusOfProposedSolutionType[]
+      ): StatusOfProposedSolutionType[] =>
+        (statusOfProposedSolutions.value[numberOfTries.value - 1] =
+          givenStatusOfProposedSolutions),
+    });
     const AreAllProposedSolutionCorrect = computed((): boolean =>
-      statusOfProposedSolutions.value[numberOfTries.value - 1].every(
+      nowStatusOfProposedSolutions.value.every(
         (statusOfProposedSolution): boolean =>
           statusOfProposedSolution === 'correct'
       )
@@ -51,30 +64,25 @@ export default defineComponent({
         if (!seed.value) return;
         if (
           !isNaN(Number(event.key)) &&
-          proposedSolutions.value[numberOfTries.value - 1].length <
-            maxNumberOfInput
+          nowProposedSolution.value.length < maxNumberOfInput
         ) {
-          proposedSolutions.value[numberOfTries.value - 1].push(event.key);
+          nowProposedSolution.value.push(event.key);
+        } else if (event.key === 'Backspace') {
+          nowProposedSolution.value.pop();
         } else if (
           event.key === 'Enter' &&
-          proposedSolutions.value[numberOfTries.value - 1].length ===
-            maxNumberOfInput
+          nowProposedSolution.value.length === maxNumberOfInput
         ) {
           axios
             .post(
               `http://localhost:${apiPort}/collation`,
               new URLSearchParams({
                 seed: String(seed.value),
-                proposedSolution:
-                  proposedSolutions.value[numberOfTries.value - 1].join(''),
-              }),
-              {
-                withCredentials: false,
-              }
+                proposedSolution: nowProposedSolution.value.join(''),
+              })
             )
             .then((response): void => {
-              statusOfProposedSolutions.value[numberOfTries.value - 1] =
-                response.data;
+              nowStatusOfProposedSolutions.value = response.data;
 
               if (
                 AreAllProposedSolutionCorrect.value ||
@@ -85,31 +93,23 @@ export default defineComponent({
                     `http://localhost:${apiPort}/getAnswer`,
                     new URLSearchParams({
                       seed: String(seed.value),
-                    }),
-                    {
-                      withCredentials: false,
-                    }
+                    })
                   )
                   .then((response): void =>
-                    emitter.emit('answerIsGiven', response.data)
+                    emitter.emit('answerIsSent', response.data)
                   )
                   .catch((error): void => console.log(error));
               } else {
                 numberOfTries.value++;
               }
             })
-            .catch((error): void => {
-              console.log(error);
-            });
-        } else if (event.key === 'Backspace') {
-          proposedSolutions.value[numberOfTries.value - 1].pop();
+            .catch((error): void => console.log(error));
         }
       });
     });
 
     return {
       seed,
-      numberOfTries,
       maxNumberOfTries,
       proposedSolutions,
       statusOfProposedSolutions,

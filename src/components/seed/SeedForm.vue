@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <div>シード値(数値)を入力してください</div>
-    <span v-if="seedError" class="error d-flex">{{ seedError }}</span>
+  <div class="text-center toCenter">
+    <div class="mb-1">シード値(数値)を入力してください</div>
+    <span v-if="seedError" class="error">{{ seedError }}</span>
     <input type="number" v-model="seed" />
-    <button type="button" @click="sendSeed">SUBMIT</button>
+    <button class="mt-3" type="button" @click="sendSeed">SUBMIT</button>
   </div>
 </template>
 

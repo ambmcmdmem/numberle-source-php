@@ -1,5 +1,7 @@
 <template>
-  <div v-if="answer">{{ answer }}</div>
+  <div v-if="answer" class="mt-2" style="font-size: 1.5rem">
+    Answer is "{{ answer }}"!
+  </div>
 </template>
 
 <script lang="ts">
@@ -10,7 +12,7 @@ export default defineComponent({
   setup() {
     const answer = ref<number | null>(null);
 
-    emitter.on('answerIsGiven', (givenAnswer: unknown) => {
+    emitter.on('answerIsSent', (givenAnswer: unknown) => {
       answer.value = Number(givenAnswer);
     });
 
@@ -20,5 +22,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss"></style>
