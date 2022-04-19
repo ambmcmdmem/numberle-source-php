@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import Collation from './Collation';
 import { apiCheckDigit } from '../modules/numberleModule';
-import { apiPort } from './apiInformation';
+// import { apiPort } from './apiInformation';
 const server = express();
 
 server.use(bodyParser.json());
@@ -19,7 +19,7 @@ server.use((request, response, next): void => {
   next();
 });
 
-server.listen(apiPort);
+server.listen(process.env.PORT || 5000);
 server.post('/collation', (request, response): void => {
   response.send(
     new Collation(request.body.seed).statusOfProposedSolution(
