@@ -34,6 +34,7 @@ export default defineComponent({
   setup(props) {
     axios.defaults.withCredentials = false;
 
+    const keyValidation = ref(true);
     const numberOfTries = ref(1);
     const proposedSolutions = ref<string[][]>(
       [...Array(maxNumberOfTries)].map((): string[] => [])
@@ -70,6 +71,8 @@ export default defineComponent({
 
     onMounted(() => {
       window.addEventListener('keydown', (event): void => {
+        if (!keyValidation.value) return;
+
         if (
           !isNaN(Number(event.key)) &&
           nowProposedSolution.value.length < maxNumberOfInput
@@ -81,6 +84,7 @@ export default defineComponent({
           event.key === 'Enter' &&
           nowProposedSolution.value.length === maxNumberOfInput
         ) {
+          keyValidation.value = false;
           axios
             .post(
               `${apiOrigin}/collation`,
@@ -107,6 +111,7 @@ export default defineComponent({
                   .catch((error): void => console.log(error));
               } else {
                 numberOfTries.value++;
+                keyValidation.value = true;
               }
             })
             .catch((error): void => console.log(error));
