@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import Collation from './Collation';
 import { apiCheckDigit } from '../modules/numberleModule';
-// import { apiPort } from './apiInformation';
 const server = express();
 
 server.use(bodyParser.json());
@@ -14,7 +13,7 @@ server.use((request, response, next): void => {
     return;
 
   response.set({
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': 'https://ambmcmdmem.github.io',
   });
   next();
 });
