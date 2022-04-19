@@ -53,7 +53,7 @@ export default defineComponent({
         (statusOfProposedSolutions.value[numberOfTries.value - 1] =
           givenStatusOfProposedSolutions),
     });
-    const AreAllProposedSolutionCorrect = computed((): boolean =>
+    const IsProposedSolutionCorrect = computed((): boolean =>
       nowStatusOfProposedSolutions.value.every(
         (statusOfProposedSolution): boolean =>
           statusOfProposedSolution === 'correct'
@@ -93,7 +93,7 @@ export default defineComponent({
               nowStatusOfProposedSolutions.value = response.data;
 
               if (
-                AreAllProposedSolutionCorrect.value ||
+                IsProposedSolutionCorrect.value ||
                 numberOfTries.value === maxNumberOfTries
               ) {
                 axios

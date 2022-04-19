@@ -11,7 +11,6 @@ export default class Collation {
 
   constructor(seed: number) {
     this.forCreatingHash = [31415926535, 8979323846, 2643383279, seed];
-    [...Array(seed % 7).keys()].forEach((): void => this.setNextHash());
 
     this.answer = this.shuffle([...Array(10).keys()])
       .slice(0, maxNumberOfInput)
@@ -38,7 +37,7 @@ export default class Collation {
       .filter((targetNo): boolean => targetNo !== 0)
       .reverse()
       .forEach((i): void => {
-        const j = Math.floor((Math.abs(this.nextHash()) % 2) * (i + 1));
+        const j = Math.floor(Math.abs(this.nextHash()) % (i + 1));
         [target[i], target[j]] = [target[j], target[i]];
       });
     return target;

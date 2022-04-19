@@ -14,24 +14,18 @@ test('Collation Tests.', () => {
     );
   });
 
-  expect(toBeTested.getAnswer()).toStrictEqual('12783');
-  expect(cloneToBeTested.getAnswer()).toStrictEqual('12783');
-  expect(cloneToBeTested.getAnswer()).not.toStrictEqual(12783);
+  expect(toBeTested.getAnswer()).toStrictEqual('80914');
+  expect(cloneToBeTested.getAnswer()).toStrictEqual('80914');
+  expect(cloneToBeTested.getAnswer()).not.toStrictEqual(80914);
   expect(toBeTested.getAnswer()).toStrictEqual(cloneToBeTested.getAnswer());
-  expect(toBeTested.getAnswer()).toStrictEqual('12783');
+  expect(toBeTested.getAnswer()).toStrictEqual('80914');
 
   expect(toBeTested.statusOfProposedSolution('01234')).toStrictEqual<
     StatusOfProposedSolutionType[]
-  >([
-    'wrong',
-    'differentLocation',
-    'differentLocation',
-    'differentLocation',
-    'wrong',
-  ]);
+  >(['differentLocation', 'differentLocation', 'wrong', 'wrong', 'correct']);
   expect(toBeTested.statusOfProposedSolution('56789')).toStrictEqual<
     StatusOfProposedSolutionType[]
-  >(['wrong', 'wrong', 'correct', 'correct', 'wrong']);
+  >(['wrong', 'wrong', 'wrong', 'differentLocation', 'differentLocation']);
   expect(() => {
     toBeTested.statusOfProposedSolution('0');
   }).toThrow(new Error('提示された文字列長と回答の文字列長が異なります。'));
