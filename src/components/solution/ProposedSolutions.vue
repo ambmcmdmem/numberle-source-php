@@ -22,7 +22,7 @@ import {
 import ProposedSolution from './ProposedSolution.vue';
 import axios from 'axios';
 import { emitter } from '../../modules/emitter';
-import { apiUrl, apiPort } from '../../api/apiInformation';
+import { apiOrigin } from '../../api/apiInformation';
 
 export default defineComponent({
   components: {
@@ -83,7 +83,7 @@ export default defineComponent({
         ) {
           axios
             .post(
-              `${apiUrl}:${apiPort}/collation`,
+              `${apiOrigin}/collation`,
               new URLSearchParams({
                 ...parametersAboutSeed.value,
                 ...{ proposedSolution: nowProposedSolution.value.join('') },
@@ -98,7 +98,7 @@ export default defineComponent({
               ) {
                 axios
                   .post(
-                    `${apiUrl}:${apiPort}/getAnswer`,
+                    `${apiOrigin}/getAnswer`,
                     new URLSearchParams(parametersAboutSeed.value)
                   )
                   .then((response): void =>

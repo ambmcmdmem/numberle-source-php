@@ -1,9 +1,9 @@
 import express from 'express';
-import { apiPort } from './apiInformation';
 import bodyParser from 'body-parser';
 import Collation from './Collation';
 import { apiCheckDigit } from '../modules/numberleModule';
 const server = express();
+export const apiPort = process.env.PORT || 5000;
 
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));

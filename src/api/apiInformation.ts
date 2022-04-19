@@ -1,2 +1,2 @@
-export const apiUrl = 'https://training-numberle.herokuapp.com';
-export const apiPort = process.env.PORT || 5000;
+import { apiPort } from './numberleApi';
+export const apiOrigin = `https://training-numberle.herokuapp.com:${apiPort}`;
