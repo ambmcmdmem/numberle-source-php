@@ -14,7 +14,7 @@ server.use((request, response, next): void => {
     return;
 
   response.set({
-    'Access-Control-Allow-Origin': 'https://ambmcmdmem.github.io',
+    'Access-Control-Allow-Origin': '*',
   });
   next();
 });
