@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import Collation from './Collation';
+import Numberle from './Numberle';
 import { apiCheckDigit } from '../modules/numberleModule';
 const server = express();
 
@@ -18,15 +19,17 @@ server.use((request, response, next): void => {
   next();
 });
 
-server.listen(process.env.PORT || 5000);
 server.post('/collation', (request, response): void => {
   response.send(
-    new Collation(request.body.seed).statusOfProposedSolution(
-      request.body.proposedSolution
+    Collation.statusOfProposedSolution(
+      request.body.proposedSolution,
+      new Numberle(request.body.seed).getAnswer()
     )
   );
 });
 
 server.post('/getAnswer', (request, response): void => {
-  response.send(new Collation(request.body.seed).getAnswer());
+  response.send(new Numberle(request.body.seed).getAnswer());
 });
+
+server.listen(process.env.PORT || 5000);
