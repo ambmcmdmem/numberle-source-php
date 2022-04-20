@@ -13,7 +13,7 @@ import { defineComponent, onMounted, ref } from 'vue';
 import SeedForm from './seed/SeedForm.vue';
 import ProposedSolutions from './solution/ProposedSolutions.vue';
 import CorrectAnswer from './answer/CorrectAnswer.vue';
-import { emitter } from '../../modules/emitter';
+import { emitter } from '../../module/emitter';
 
 export default defineComponent({
   components: {
