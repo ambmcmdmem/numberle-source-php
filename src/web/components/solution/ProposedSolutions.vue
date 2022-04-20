@@ -18,11 +18,11 @@ import {
   maxNumberOfTries,
   StatusOfProposedSolutionType,
   apiCheckDigit,
-} from '../../modules/numberleModule';
+} from '../../../module/numberleModule';
 import ProposedSolution from './ProposedSolution.vue';
 import axios from 'axios';
-import { emitter } from '../../modules/emitter';
-import { apiOrigin } from '../../api/apiInformation';
+import { emitter } from '../../../module/emitter';
+import { apiOrigin } from '../../../server/module/apiInformation';
 
 export default defineComponent({
   components: {

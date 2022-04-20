@@ -6,8 +6,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { emitter } from '../../modules/emitter';
-import { maxNumberOfInput } from '../../modules/numberleModule';
+import { emitter } from '../../../module/emitter';
+import { maxNumberOfInput } from '../../../module/numberleModule';
 
 export default defineComponent({
   setup() {

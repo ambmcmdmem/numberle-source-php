@@ -1,9 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import Collation from './Collation';
-import Numberle from './Numberle';
-import { apiCheckDigit } from '../modules/numberleModule';
-import { accessAllowOrigin } from './apiInformation';
+import Collation from '../module/Collation';
+import Numberle from '../module/Numberle';
+import { apiCheckDigit } from '../../module/numberleModule';
+import { accessAllowOrigin } from '../module/apiInformation';
 const server = express();
 
 server.use(bodyParser.json());

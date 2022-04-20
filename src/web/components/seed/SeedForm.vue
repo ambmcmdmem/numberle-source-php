@@ -9,8 +9,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
-import { emitter } from '../../modules/emitter';
-import { ensure } from '../../modules/numberleModule';
+import { emitter } from '../../../module/emitter';
+import { ensure } from '../../../module/typeModule';
 
 const doesFallForValidation = (target: {
   validation: () => boolean;

@@ -1,7 +1,5 @@
-import {
-  ensure,
-  StatusOfProposedSolutionType,
-} from '../modules/numberleModule';
+import { StatusOfProposedSolutionType } from '../../module/numberleModule';
+import { ensure } from '../../module/typeModule';
 
 const toStatus =
   (answer: string) =>

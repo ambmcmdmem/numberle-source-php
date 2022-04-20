@@ -15,7 +15,7 @@ import Character from './Character.vue';
 import {
   maxNumberOfInput,
   StatusOfProposedSolutionType,
-} from '../../modules/numberleModule';
+} from '../../../modules/numberleModule';
 
 export default defineComponent({
   props: {
