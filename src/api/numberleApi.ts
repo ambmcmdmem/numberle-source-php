@@ -21,7 +21,7 @@ server.use((request, response, next): void => {
 
 server.post('/collation', (request, response): void => {
   response.send(
-    Collation.statusOfProposedSolution(
+    new Collation().statusOfProposedSolution(
       request.body.proposedSolution,
       new Numberle(request.body.seed).getAnswer()
     )

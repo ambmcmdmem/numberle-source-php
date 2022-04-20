@@ -22,7 +22,7 @@ test('Collation Tests.', () => {
   expect(toBeTested.getAnswer()).toStrictEqual('80914');
 
   expect(
-    Collation.statusOfProposedSolution('01234', toBeTested.getAnswer())
+    new Collation().statusOfProposedSolution('01234', toBeTested.getAnswer())
   ).toStrictEqual<StatusOfProposedSolutionType[]>([
     'differentLocation',
     'differentLocation',
@@ -31,7 +31,7 @@ test('Collation Tests.', () => {
     'correct',
   ]);
   expect(
-    Collation.statusOfProposedSolution('56789', toBeTested.getAnswer())
+    new Collation().statusOfProposedSolution('56789', toBeTested.getAnswer())
   ).toStrictEqual<StatusOfProposedSolutionType[]>([
     'wrong',
     'wrong',
@@ -40,9 +40,12 @@ test('Collation Tests.', () => {
     'differentLocation',
   ]);
   expect(() => {
-    Collation.statusOfProposedSolution('0', toBeTested.getAnswer());
+    new Collation().statusOfProposedSolution('0', toBeTested.getAnswer());
   }).toThrow(new Error('提示された文字列長と回答の文字列長が異なります。'));
   expect(() => {
-    Collation.statusOfProposedSolution('0123456789', toBeTested.getAnswer());
+    new Collation().statusOfProposedSolution(
+      '0123456789',
+      toBeTested.getAnswer()
+    );
   }).toThrow(new Error('提示された文字列長と回答の文字列長が異なります。'));
 });

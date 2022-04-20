@@ -10,13 +10,8 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../modules/emitter';
+import { ensure } from '../../modules/numberleModule';
 
-const ensure = <T>(argument: T | undefined | null): T => {
-  if (argument === undefined || argument === null)
-    throw new Error('ensureの引数がnullもしくはundefinedになっています。');
-
-  return argument;
-};
 const doesFallForValidation = (target: {
   validation: () => boolean;
 }): boolean => !target.validation();
