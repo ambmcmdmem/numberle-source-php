@@ -30,14 +30,14 @@ export default class Numberle {
   }
 
   private shuffle<T>(target: T[]): T[] {
-    [...Array(target.length).keys()]
+    return [...Array(target.length).keys()]
       .filter((targetNo): boolean => targetNo !== 0)
       .reverse()
-      .forEach((i): void => {
+      .reduce((toBeShuffled, i) => {
         const j = Math.floor(Math.abs(this.nextHash()) % (i + 1));
-        [target[i], target[j]] = [target[j], target[i]];
-      });
-    return target;
+        [toBeShuffled[i], toBeShuffled[j]] = [toBeShuffled[j], toBeShuffled[i]];
+        return toBeShuffled;
+      }, target);
   }
 
   public getAnswer(): string {

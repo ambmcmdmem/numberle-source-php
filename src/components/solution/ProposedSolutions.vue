@@ -102,7 +102,7 @@ export default defineComponent({
               ) {
                 axios
                   .post(
-                    `${apiOrigin}/getAnswer`,
+                    `${apiOrigin}/answer`,
                     new URLSearchParams(parametersAboutSeed.value)
                   )
                   .then((response): void =>

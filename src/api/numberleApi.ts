@@ -29,7 +29,7 @@ server.post('/collation', (request, response): void => {
   );
 });
 
-server.post('/getAnswer', (request, response): void => {
+server.post('/answer', (request, response): void => {
   response.send(new Numberle(request.body.seed).getAnswer());
 });
 
