@@ -33,7 +33,7 @@ export default class Numberle {
     return [...Array(target.length).keys()]
       .filter((targetNo): boolean => targetNo !== 0)
       .reverse()
-      .reduce((toBeShuffled, i) => {
+      .reduce((toBeShuffled: T[], i: number): T[] => {
         const j = Math.floor(Math.abs(this.nextHash()) % (i + 1));
         [toBeShuffled[i], toBeShuffled[j]] = [toBeShuffled[j], toBeShuffled[i]];
         return toBeShuffled;

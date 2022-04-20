@@ -7,8 +7,7 @@
     "start": "ts-node ./src/server/api/numberleApi.ts",
     "webpack": "npx webpack",
     "compile:scss": "node-sass ./style/scss/index.scss ./style/css/index.css",
-    "test": "jest",
-    "deploy": "gh-pages -d dist"
+    "test": "jest"
   },
   "author": "Daiki Yamamoto <d.yamamoto@xxxaz.jp> (https://github.com/ambmcmdmem)",
   "license": "ISC",
@@ -20,7 +19,6 @@
     "body-parser": "^1.20.0",
     "css-loader": "^6.7.1",
     "express": "^4.17.3",
-    "gh-pages": "^3.2.3",
     "jest": "^27.5.1",
     "mitt": "^3.0.0",
     "node-sass": "^7.0.1",
