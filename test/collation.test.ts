@@ -1,6 +1,6 @@
 import Collation from '../src/server/module/Collation';
 import Numberle from '../src/server/module/Numberle';
-import { StatusOfProposedSolutionType } from '../src/module/numberleModule';
+import { StatusOfProposedSolutionType } from '../src/module/numberleConfig';
 
 const toBeTested = new Numberle(1);
 const cloneToBeTested = new Numberle(1);

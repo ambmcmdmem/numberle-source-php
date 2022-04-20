@@ -1,4 +1,4 @@
-import { maxNumberOfInput } from '../../module/numberleModule';
+import { maxNumberOfInput } from '../../module/numberleConfig';
 
 type ConsistingOf4<T> = [T, T, T, T];
 

@@ -18,7 +18,7 @@ import {
   maxNumberOfTries,
   StatusOfProposedSolutionType,
   apiCheckDigit,
-} from '../../../module/numberleModule';
+} from '../../../module/numberleConfig';
 import ProposedSolution from './ProposedSolution.vue';
 import axios from 'axios';
 import { emitter } from '../../../module/emitter';

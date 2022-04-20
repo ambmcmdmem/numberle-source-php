@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
-import { maxNumberOfInput } from '../../../module/numberleModule';
+import { maxNumberOfInput } from '../../../module/numberleConfig';
 
 export default defineComponent({
   setup() {
