@@ -1,32 +1,33 @@
 import { StatusOfProposedSolutionType } from '../../module/numberleConfig';
-import { ensure } from '../../module/typeModule';
+import Validation from '../../module/Validation';
 
+const validation = new Validation();
 const toStatus =
   (answer: string) =>
   (
     proposedSolutionCharacter: string,
     proposedSolutionCharacterNo: number
   ): StatusOfProposedSolutionType => {
-    const conditionAndStatus: {
-      condition: () => boolean;
+    const validationAndStatus: {
+      validation: () => boolean;
       status: StatusOfProposedSolutionType;
     }[] = [
       {
-        condition: () =>
+        validation: () =>
           proposedSolutionCharacter ===
           answer.charAt(proposedSolutionCharacterNo),
         status: 'correct',
       },
       {
-        condition: () => answer.includes(proposedSolutionCharacter),
+        validation: () => answer.includes(proposedSolutionCharacter),
         status: 'differentLocation',
       },
-      {
-        condition: () => true,
-        status: 'wrong',
-      },
     ];
-    return ensure(conditionAndStatus.find(({ condition }) => condition)).status;
+    return validationAndStatus.some(validation.doesFallForValidation)
+      ? validation.ensure(
+          validationAndStatus.find(validation.doesFallForValidation)
+        ).status
+      : 'wrong';
   };
 
 export default class Collation {

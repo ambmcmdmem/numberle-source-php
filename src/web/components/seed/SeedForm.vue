@@ -10,11 +10,9 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
-import { ensure } from '../../../module/typeModule';
+import Validation from '../../../module/Validation';
 
-const doesFallForValidation = (target: {
-  validation: () => boolean;
-}): boolean => !target.validation();
+const validation = new Validation();
 
 export default defineComponent({
   setup() {
@@ -32,9 +30,11 @@ export default defineComponent({
       },
     ];
     const seedError = computed((): string =>
-      validationAndErrors.some(doesFallForValidation)
-        ? ensure(validationAndErrors.find(doesFallForValidation)).error
-        : ''
+      validationAndErrors.every(validation.doesFallForValidation)
+        ? ''
+        : validation.ensure(
+            validationAndErrors.find(validation.doesFallForValidation)
+          ).error
     );
 
     const sendSeed = (): void => {
