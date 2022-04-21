@@ -31,7 +31,13 @@ server.post('/collation', (request, response): void => {
 });
 
 server.post('/answer', (request, response): void => {
-  response.send(new Numberle(request.body.seed).getAnswer());
+  // response.send(new Numberle(request.body.seed).getAnswer());
+  response.send(
+    collation.statusOfProposedSolution(
+      request.body.proposedSolution,
+      new Numberle(request.body.seed).getAnswer()
+    )
+  );
 });
 
 server.listen(process.env.PORT || 3000);
