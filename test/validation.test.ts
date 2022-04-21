@@ -1,21 +1,26 @@
-import Validation from '../src/module/Validation';
+import ErrorValidation from '../src/web/module/ErrorValidation';
+import StatusValidation from '../src/server/module/StatusValidation';
 
-const validation = new Validation();
+const errorValidation = new ErrorValidation();
+const statusValidation = new StatusValidation();
 
 test('Validation tests.', () => {
-  expect(validation.ensure('test')).toStrictEqual('test');
-  expect(validation.ensure(123)).toStrictEqual(123);
-  expect(() => {
-    validation.ensure(undefined);
-  }).toThrow(new Error('ensureの引数がnullもしくはundefinedになっています。'));
-  expect(() => {
-    validation.ensure(null);
-  }).toThrow(new Error('ensureの引数がnullもしくはundefinedになっています。'));
-
   expect(
-    validation.doesPassValidation({ validation: () => true })
-  ).toStrictEqual(true);
+    errorValidation.next(() => true, 'errorValidationNextTest')
+  ).toStrictEqual({
+    validation: () => true,
+    error: 'errorValidationNextTest',
+  });
   expect(
-    validation.doesPassValidation({ validation: () => false })
-  ).toStrictEqual(false);
+    errorValidation.result([
+      {
+        validation: () => false,
+        error: 'error validation result not display',
+      },
+      {
+        validation: () => true,
+        error: 'error validation result display',
+      },
+    ])
+  ).toStrictEqual('error validation result');
 });
