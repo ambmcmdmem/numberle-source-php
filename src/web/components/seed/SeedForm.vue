@@ -19,22 +19,21 @@ export default defineComponent({
     const isInput = ref(false);
     const seed = ref<number | ''>('');
     const validationAndErrors = [
-      {
-        validation: () => String(seed.value).length > 0,
-        error: 'シード値を入力してください。',
-      },
-      {
-        validation: () =>
-          Number.isInteger(seed.value) && Number(seed.value) > 0,
-        error: 'シード値は0より大きい整数としてください。',
-      },
+      validation.validationAndError(
+        () => String(seed.value).length > 0,
+        'シード値を入力してください。'
+      ),
+      validation.validationAndError(
+        () => Number.isInteger(seed.value) && Number(seed.value) > 0,
+        'シード値は0より大きい整数としてください。'
+      ),
     ];
     const seedError = computed((): string =>
-      validationAndErrors.every(validation.doesFallForValidation)
-        ? ''
-        : validation.ensure(
+      validationAndErrors.some(validation.doesFallForValidation)
+        ? validation.ensure(
             validationAndErrors.find(validation.doesFallForValidation)
           ).error
+        : ''
     );
 
     const sendSeed = (): void => {
