@@ -13,9 +13,9 @@ test('Validation tests.', () => {
   }).toThrow(new Error('ensureの引数がnullもしくはundefinedになっています。'));
 
   expect(
-    validation.doesFallForValidation({ validation: () => true })
+    validation.doesPassValidation({ validation: () => true })
   ).toStrictEqual(true);
   expect(
-    validation.doesFallForValidation({ validation: () => false })
+    validation.doesPassValidation({ validation: () => false })
   ).toStrictEqual(false);
 });

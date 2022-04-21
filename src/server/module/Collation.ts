@@ -12,20 +12,20 @@ const toStatus =
       validation: () => boolean;
       status: StatusOfProposedSolutionType;
     }[] = [
-      {
-        validation: () =>
+      validation.validationAndStatus(
+        () =>
           proposedSolutionCharacter ===
           answer.charAt(proposedSolutionCharacterNo),
-        status: 'correct',
-      },
-      {
-        validation: () => answer.includes(proposedSolutionCharacter),
-        status: 'differentLocation',
-      },
+        'correct'
+      ),
+      validation.validationAndStatus(
+        () => answer.includes(proposedSolutionCharacter),
+        'differentLocation'
+      ),
     ];
-    return validationAndStatus.some(validation.doesFallForValidation)
+    return validationAndStatus.some(validation.doesPassValidation)
       ? validation.ensure(
-          validationAndStatus.find(validation.doesFallForValidation)
+          validationAndStatus.find(validation.doesPassValidation)
         ).status
       : 'wrong';
   };
