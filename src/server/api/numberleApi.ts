@@ -33,4 +33,4 @@ server
   .post('/answer', (request, response): void => {
     response.send(new Numberle(request.body.seed).getAnswer());
   })
-  .listen(process.env.PORT || 3000);
+  .listen(8000);

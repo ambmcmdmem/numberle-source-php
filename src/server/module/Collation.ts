@@ -8,7 +8,7 @@ const toStatus =
     proposedSolutionCharacter: string,
     proposedSolutionCharacterNo: number
   ): StatusOfProposedSolutionType => {
-    return validation
+    const validationResult = validation
       .next(
         () =>
           proposedSolutionCharacter ===
@@ -20,6 +20,9 @@ const toStatus =
         'differentLocation'
       )
       .result('wrong', true);
+    validation.emptyValidationAndResults();
+
+    return validationResult;
   };
 
 export default class Collation {
