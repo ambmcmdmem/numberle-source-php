@@ -9,23 +9,16 @@ const collation = new Collation();
 
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
-// server.use((request, response, next): void => {
-//   if (
-//     apiCheckDigit(Number(request.body.seed)) !== Number(request.body.checkDigit)
-//   )
-//     return;
+server.use((request, response, next): void => {
+  if (
+    apiCheckDigit(Number(request.body.seed)) !== Number(request.body.checkDigit)
+  )
+    return;
 
-//   response.set({
-//     'Access-Control-Allow-Origin': accessAllowOrigin,
-//   });
-//   next();
-// });
-
-server.post('/answer', (request, response): void => {
   response.set({
     'Access-Control-Allow-Origin': accessAllowOrigin,
   });
-  response.send(new Numberle(request.body.seed).getAnswer());
+  next();
 });
 
 server.post('/collation', (request, response): void => {
@@ -35,6 +28,10 @@ server.post('/collation', (request, response): void => {
       new Numberle(request.body.seed).getAnswer()
     )
   );
+});
+
+server.post('/answer', (request, response): void => {
+  response.send(new Numberle(request.body.seed).getAnswer());
 });
 
 server.listen(process.env.PORT || 3000);
