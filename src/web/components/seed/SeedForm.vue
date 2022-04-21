@@ -10,30 +10,26 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
-import Validation from '../../../module/Validation';
+import ErrorValidation from '../../module/ErrorValidation';
 
-const validation = new Validation();
+const errorValidation = new ErrorValidation();
 
 export default defineComponent({
   setup() {
     const isInput = ref(false);
     const seed = ref<number | ''>('');
     const validationAndErrors = [
-      validation.validationAndError(
+      errorValidation.next(
         () => String(seed.value).length > 0,
         'シード値を入力してください。'
       ),
-      validation.validationAndError(
+      errorValidation.next(
         () => Number.isInteger(seed.value) && Number(seed.value) > 0,
         'シード値は0より大きい整数としてください。'
       ),
     ];
     const seedError = computed((): string =>
-      validationAndErrors.some(validation.doesFallForValidation)
-        ? validation.ensure(
-            validationAndErrors.find(validation.doesFallForValidation)
-          ).error
-        : ''
+      errorValidation.result(validationAndErrors)
     );
 
     const sendSeed = (): void => {

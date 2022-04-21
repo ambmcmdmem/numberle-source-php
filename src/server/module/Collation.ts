@@ -1,7 +1,7 @@
 import { StatusOfProposedSolutionType } from '../../module/numberleConfig';
-import Validation from '../../module/Validation';
+import StatusValidation from './StatusValidation';
 
-const validation = new Validation();
+const statusValidation = new StatusValidation();
 const toStatus =
   (answer: string) =>
   (
@@ -12,22 +12,18 @@ const toStatus =
       validation: () => boolean;
       status: StatusOfProposedSolutionType;
     }[] = [
-      validation.validationAndStatus(
+      statusValidation.next(
         () =>
           proposedSolutionCharacter ===
           answer.charAt(proposedSolutionCharacterNo),
         'correct'
       ),
-      validation.validationAndStatus(
+      statusValidation.next(
         () => answer.includes(proposedSolutionCharacter),
         'differentLocation'
       ),
     ];
-    return validationAndStatus.some(validation.doesPassValidation)
-      ? validation.ensure(
-          validationAndStatus.find(validation.doesPassValidation)
-        ).status
-      : 'wrong';
+    return statusValidation.result(validationAndStatus);
   };
 
 export default class Collation {
