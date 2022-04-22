@@ -14,28 +14,6 @@ const pattern = (
     status,
   };
 };
-const toStatus =
-  (answer: string) =>
-  (
-    proposedSolutionCharacter: string,
-    proposedSolutionCharacterNo: number
-  ): StatusOfProposedSolutionType => {
-    const conditionAndStatus: ConditionAndStatus[] = [
-      pattern(
-        () =>
-          proposedSolutionCharacter ===
-          answer.charAt(proposedSolutionCharacterNo),
-        'correct'
-      ),
-      pattern(
-        () => answer.includes(proposedSolutionCharacter),
-        'differentLocation'
-      ),
-      pattern(() => true, 'wrong'),
-    ];
-    return conditionAndStatus.find(({ condition }): boolean => condition())!
-      .status;
-  };
 
 export default class Collation {
   public statusOfProposedSolution(
@@ -45,6 +23,27 @@ export default class Collation {
     if (proposedSolution.length !== answer.length)
       throw new Error('提示された文字列長と回答の文字列長が異なります。');
 
-    return [...proposedSolution].map(toStatus(answer));
+    return [...proposedSolution].map(
+      (
+        proposedSolutionCharacter: string,
+        proposedSolutionCharacterNo: number
+      ): StatusOfProposedSolutionType => {
+        const conditionAndStatus: ConditionAndStatus[] = [
+          pattern(
+            () =>
+              proposedSolutionCharacter ===
+              answer.charAt(proposedSolutionCharacterNo),
+            'correct'
+          ),
+          pattern(
+            () => answer.includes(proposedSolutionCharacter),
+            'differentLocation'
+          ),
+          pattern(() => true, 'wrong'),
+        ];
+        return conditionAndStatus.find(({ condition }): boolean => condition())!
+          .status;
+      }
+    );
   }
 }
