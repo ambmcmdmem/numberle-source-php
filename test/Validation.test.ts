@@ -4,12 +4,12 @@ import { StatusOfProposedSolutionType } from '../src/module/numberleConfig';
 describe('Validation', () => {
   const toBeTested = new Validation<StatusOfProposedSolutionType>();
   describe('next', () => {
-    test('nextを呼び出す前後でインスタンスがきちんと異なるか', () => {
+    test('nextを呼び出す前後でインスタンスが異なるか', () => {
       expect(toBeTested).not.toStrictEqual(
         toBeTested.next(() => true, 'correct')
       );
     });
-    test('nextがチェーンをしてもnextを呼び出す前後できちんとインスタンスが異なっているか', () => {
+    test('nextがチェーンをしてもnextを呼び出す前後でインスタンスが異なっているか', () => {
       expect(toBeTested.next(() => true, 'correct')).not.toStrictEqual(
         toBeTested
           .next(() => true, 'correct')
@@ -18,17 +18,17 @@ describe('Validation', () => {
     });
   });
   describe('result', () => {
-    test('resultのみのとき、defaultResultの値がきちんと返されるか', () => {
+    test('resultのみのとき、defaultResultの値が返されるか', () => {
       expect(toBeTested.result('wrong')).toStrictEqual('wrong');
     });
   });
   describe('next + result', () => {
-    test('next内のvalidation()がfalseであるとき、きちんとresultの値を返すか', () => {
+    test('next内のvalidation()がfalseであるとき、resultの値を返すか', () => {
       expect(
         toBeTested.next(() => false, 'correct').result('wrong')
       ).toStrictEqual('correct');
     });
-    test('nextがチェーンをしてもきちんとresultの値を返すか', () => {
+    test('nextがチェーンをしてもresultの値を返すか', () => {
       expect(
         toBeTested
           .next(() => true, 'correct')
