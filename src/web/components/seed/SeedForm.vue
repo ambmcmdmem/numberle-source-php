@@ -12,19 +12,17 @@ import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
 import Validation from '../../../module/Validation';
 
-const validation = new Validation<string>();
-
 export default defineComponent({
   setup() {
     const isInput = ref(false);
     const seed = ref<number | ''>('');
-    validation
+    const validation = new Validation<string>()
       .next(() => String(seed.value).length > 0, 'シード値を入力してください。')
       .next(
         () => Number.isInteger(seed.value) && Number(seed.value) > 0,
         'シード値は0より大きい整数としてください。'
       );
-    const seedError = computed((): string => validation.result('', false));
+    const seedError = computed((): string => validation.failedResult(''));
 
     const sendSeed = (): void => {
       if (seedError.value || typeof seed.value !== 'number') {
