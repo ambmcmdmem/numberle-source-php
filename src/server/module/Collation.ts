@@ -12,15 +12,15 @@ const toStatus =
     return validation
       .next(
         () =>
-          proposedSolutionCharacter ===
+          proposedSolutionCharacter !==
           answer.charAt(proposedSolutionCharacterNo),
         'correct'
       )
       .next(
-        () => answer.includes(proposedSolutionCharacter),
+        () => !answer.includes(proposedSolutionCharacter),
         'differentLocation'
       )
-      .passedResult('wrong');
+      .result('wrong');
   };
 
 export default class Collation {

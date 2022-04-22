@@ -22,7 +22,7 @@ export default defineComponent({
         () => Number.isInteger(seed.value) && Number(seed.value) > 0,
         'シード値は0より大きい整数としてください。'
       );
-    const seedError = computed((): string => validation.failedResult(''));
+    const seedError = computed((): string => validation.result(''));
 
     const sendSeed = (): void => {
       if (seedError.value || typeof seed.value !== 'number') {
