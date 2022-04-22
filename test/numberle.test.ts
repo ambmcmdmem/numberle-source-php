@@ -8,65 +8,64 @@ import Validation from '../src/module/Validation';
 
 describe('Numberle', () => {
   const toBeTested = new Numberle(1);
-  const cloneToBeTested = new Numberle(1);
-  test('getAnswer', () => {
-    expect(toBeTested.getAnswer()).toStrictEqual('80914');
-    expect(cloneToBeTested.getAnswer()).toStrictEqual('80914');
-    expect(cloneToBeTested.getAnswer()).not.toStrictEqual(80914);
-    expect(toBeTested.getAnswer()).toStrictEqual(cloneToBeTested.getAnswer());
-    expect(toBeTested.getAnswer()).toStrictEqual('80914');
+  describe('getAnswer', () => {
+    test('適切な回答を返すか', () => {
+      expect(toBeTested.getAnswer()).toStrictEqual('80914');
+    });
   });
 });
 
 describe('Collation', () => {
   const toBeTested = new Collation();
   const numberle = new Numberle(1);
-  test('statusOfProposedSolution', () => {
-    expect(
-      toBeTested.statusOfProposedSolution('01234', numberle.getAnswer())
-    ).toStrictEqual<StatusOfProposedSolutionType[]>([
-      'differentLocation',
-      'differentLocation',
-      'wrong',
-      'wrong',
-      'correct',
-    ]);
-    expect(
-      toBeTested.statusOfProposedSolution('56789', numberle.getAnswer())
-    ).toStrictEqual<StatusOfProposedSolutionType[]>([
-      'wrong',
-      'wrong',
-      'wrong',
-      'differentLocation',
-      'differentLocation',
-    ]);
-    expect(() => {
-      toBeTested.statusOfProposedSolution('0', numberle.getAnswer());
-    }).toThrow(new Error('提示された文字列長と回答の文字列長が異なります。'));
-    expect(() => {
-      toBeTested.statusOfProposedSolution('0123456789', numberle.getAnswer());
-    }).toThrow(new Error('提示された文字列長と回答の文字列長が異なります。'));
+  describe('statusOfProposedSolution', () => {
+    test('適切な値を返すか', () => {
+      expect(
+        toBeTested.statusOfProposedSolution('01234', numberle.getAnswer())
+      ).toStrictEqual<StatusOfProposedSolutionType[]>([
+        'differentLocation',
+        'differentLocation',
+        'wrong',
+        'wrong',
+        'correct',
+      ]);
+    });
+    test('提示された文字列長が回答の文字列長と異なっていた場合、きちんとエラーを返すか', () => {
+      expect(() => {
+        toBeTested.statusOfProposedSolution('0', numberle.getAnswer());
+      }).toThrow(new Error('提示された文字列長と回答の文字列長が異なります。'));
+    });
   });
 });
 
 describe('numberleConfig', () => {
-  test('apiCheckDigit', () => {
-    expect(apiCheckDigit(1)).toStrictEqual(1234509876);
+  describe('apiCheckDigit', () => {
+    test('適当な値を返すか', () => {
+      expect(apiCheckDigit(1)).toStrictEqual(1234509876);
+    });
   });
 });
 
 describe('Validation', () => {
   const toBeTested = new Validation<StatusOfProposedSolutionType>();
-  test('next + result', () => {
-    expect(toBeTested.result('wrong')).toStrictEqual('wrong');
-    expect(
-      toBeTested.next(() => false, 'correct').result('wrong')
-    ).toStrictEqual('correct');
-    expect(
-      toBeTested
-        .next(() => true, 'correct')
-        .next(() => false, 'differentLocation')
-        .result('wrong')
-    ).toStrictEqual('differentLocation');
+  describe('result', () => {
+    test('適切な値を返すか', () => {
+      expect(toBeTested.result('wrong')).toStrictEqual('wrong');
+    });
+  });
+  describe('result + next', () => {
+    test('適切な値を返すか', () => {
+      expect(
+        toBeTested.next(() => false, 'correct').result('wrong')
+      ).toStrictEqual('correct');
+    });
+    test('チェーンをしても適切な値を返すか', () => {
+      expect(
+        toBeTested
+          .next(() => true, 'correct')
+          .next(() => false, 'differentLocation')
+          .result('wrong')
+      ).toStrictEqual('differentLocation');
+    });
   });
 });
