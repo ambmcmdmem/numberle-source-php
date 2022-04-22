@@ -5,32 +5,40 @@ type ConditionAndStatus = {
   status: StatusOfProposedSolutionType;
 };
 
-export default class Collation {
-  private conditionAndStatus: ConditionAndStatus[] = [];
-
-  constructor(conditionAndStatus: ConditionAndStatus[] = []) {
-    this.conditionAndStatus = conditionAndStatus;
-  }
-
-  private toStatus =
-    (answer: string) =>
-    (
-      proposedSolutionCharacter: string,
-      proposedSolutionCharacterNo: number
-    ): StatusOfProposedSolutionType => {
-      return this.next(
+const pattern = (
+  condition: () => boolean,
+  status: StatusOfProposedSolutionType
+): ConditionAndStatus => {
+  return {
+    condition,
+    status,
+  };
+};
+const toStatus =
+  (answer: string) =>
+  (
+    proposedSolutionCharacter: string,
+    proposedSolutionCharacterNo: number
+  ): StatusOfProposedSolutionType => {
+    const conditionAndStatus: ConditionAndStatus[] = [
+      pattern(
         () =>
           proposedSolutionCharacter ===
           answer.charAt(proposedSolutionCharacterNo),
         'correct'
-      )
-        .next(
-          () => answer.includes(proposedSolutionCharacter),
-          'differentLocation'
-        )
-        .result('wrong');
-    };
+      ),
+      pattern(
+        () => answer.includes(proposedSolutionCharacter),
+        'differentLocation'
+      ),
+    ];
+    return (
+      conditionAndStatus.find(({ condition }): boolean => condition())
+        ?.status ?? 'wrong'
+    );
+  };
 
+export default class Collation {
   public statusOfProposedSolution(
     proposedSolution: string,
     answer: string
@@ -38,26 +46,6 @@ export default class Collation {
     if (proposedSolution.length !== answer.length)
       throw new Error('提示された文字列長と回答の文字列長が異なります。');
 
-    return [...proposedSolution].map(this.toStatus(answer));
+    return [...proposedSolution].map(toStatus(answer));
   }
-
-  private doesMatchCondition = (target: {
-    condition: () => boolean;
-  }): boolean => target.condition();
-
-  private next = (
-    condition: () => boolean,
-    status: StatusOfProposedSolutionType
-  ): Collation => {
-    return new Collation(this.conditionAndStatus.concat({ condition, status }));
-  };
-
-  private result = (
-    defaultStatus: StatusOfProposedSolutionType
-  ): StatusOfProposedSolutionType => {
-    return (
-      this.conditionAndStatus.find(this.doesMatchCondition)?.status ??
-      defaultStatus
-    );
-  };
 }
