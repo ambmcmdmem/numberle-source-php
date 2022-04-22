@@ -31,11 +31,10 @@ const toStatus =
         () => answer.includes(proposedSolutionCharacter),
         'differentLocation'
       ),
+      pattern(() => true, 'wrong'),
     ];
-    return (
-      conditionAndStatus.find(({ condition }): boolean => condition())
-        ?.status ?? 'wrong'
-    );
+    return conditionAndStatus.find(({ condition }): boolean => condition())!
+      .status;
   };
 
 export default class Collation {
