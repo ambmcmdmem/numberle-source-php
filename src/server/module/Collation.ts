@@ -1,27 +1,19 @@
 import { StatusOfProposedSolutionType } from '../../module/numberleConfig';
-import Validation from '../../module/Validation';
 
-const toStatus =
-  (answer: string) =>
-  (
-    proposedSolutionCharacter: string,
-    proposedSolutionCharacterNo: number
-  ): StatusOfProposedSolutionType => {
-    const validation = new Validation<StatusOfProposedSolutionType>();
+type ConditionAndStatus = {
+  condition: () => boolean;
+  status: StatusOfProposedSolutionType;
+};
 
-    return validation
-      .next(
-        () =>
-          proposedSolutionCharacter !==
-          answer.charAt(proposedSolutionCharacterNo),
-        'correct'
-      )
-      .next(
-        () => !answer.includes(proposedSolutionCharacter),
-        'differentLocation'
-      )
-      .result('wrong');
+const pattern = (
+  condition: () => boolean,
+  status: StatusOfProposedSolutionType
+): ConditionAndStatus => {
+  return {
+    condition,
+    status,
   };
+};
 
 export default class Collation {
   public statusOfProposedSolution(
@@ -31,6 +23,27 @@ export default class Collation {
     if (proposedSolution.length !== answer.length)
       throw new Error('提示された文字列長と回答の文字列長が異なります。');
 
-    return [...proposedSolution].map(toStatus(answer));
+    return [...proposedSolution].map(
+      (
+        proposedSolutionCharacter: string,
+        proposedSolutionCharacterNo: number
+      ): StatusOfProposedSolutionType => {
+        const conditionAndStatus: ConditionAndStatus[] = [
+          pattern(
+            () =>
+              proposedSolutionCharacter ===
+              answer.charAt(proposedSolutionCharacterNo),
+            'correct'
+          ),
+          pattern(
+            () => answer.includes(proposedSolutionCharacter),
+            'differentLocation'
+          ),
+          pattern(() => true, 'wrong'),
+        ];
+        return conditionAndStatus.find(({ condition }): boolean => condition())!
+          .status;
+      }
+    );
   }
 }
