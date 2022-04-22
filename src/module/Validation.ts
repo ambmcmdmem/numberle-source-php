@@ -10,9 +10,6 @@ export default class Validation<T> {
     this.validationAndResults = validationAndResults;
   }
 
-  private doesPassValidation = (target: {
-    validation: () => boolean;
-  }): boolean => target.validation();
   private doesFailValidation = (target: {
     validation: () => boolean;
   }): boolean => !target.validation();
@@ -23,13 +20,7 @@ export default class Validation<T> {
     );
   };
 
-  public passedResult = (defaultResult: T): T => {
-    return (
-      this.validationAndResults.find(this.doesPassValidation)?.result ??
-      defaultResult
-    );
-  };
-  public failedResult = (defaultResult: T): T => {
+  public result = (defaultResult: T): T => {
     return (
       this.validationAndResults.find(this.doesFailValidation)?.result ??
       defaultResult
