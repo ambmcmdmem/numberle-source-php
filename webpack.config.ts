@@ -28,5 +28,3 @@ module.exports = {
     extensions: ['.ts', '.js'],
   },
 };
-
-// github actions test
