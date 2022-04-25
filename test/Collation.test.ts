@@ -18,7 +18,7 @@ describe('Collation', () => {
         'correct',
       ]);
     });
-    test('提示された文字列長が回答の文字列長と異なっていた場合、エラーを出力すること', () => {
+    test('提示された文字列長が回答の文字列長と異なっていた場合、エラーを送出すること', () => {
       expect(() => {
         toBeTested.statusOfProposedSolution('0', numberle.getAnswer());
       }).toThrow(new Error('提示された文字列長と回答の文字列長が異なります。'));
