@@ -18,12 +18,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Runs a single command using the runners shell
-      - uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - run: git config --global url."https://${{ secrets.PAT }}@github.com/".insteadOf ssh://git@github.com/
-      - run: npm ci
+      # - uses: actions/checkout@v2
+      #   with:
+      #     persist-credentials: false
+      # - uses: actions/setup-node@v1
+      #   with:
+      #     node-version: 12.x
+      # - run: git config --global url."https://${{ secrets.PAT }}@github.com/".insteadOf ssh://git@github.com/
+      # - run: npm ci
       - run: npx jest
