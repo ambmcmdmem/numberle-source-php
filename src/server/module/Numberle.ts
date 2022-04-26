@@ -43,8 +43,6 @@ export default class Numberle {
   }
 
   public getAnswer(): string {
-    if (this.answer.length !== maxNumberOfInput)
-      throw new Error('回答の文字列長が指定されたものと一致しません。');
     return this.answer;
   }
 }
