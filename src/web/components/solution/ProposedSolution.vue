@@ -12,23 +12,16 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import Character from './Character.vue';
-import {
-  maxNumberOfInput,
-  StatusOfProposedSolutionType,
-} from '../../../module/numberleConfig';
+import { StatusOfProposedSolutionType } from '../../../module/numberleConfig';
 
 export default defineComponent({
   props: {
     proposedSolution: Array as PropType<string[]>,
     statusOfProposedSolution: Array as PropType<StatusOfProposedSolutionType[]>,
+    maxNumberOfInput: Number,
   },
   components: {
     Character,
-  },
-  setup() {
-    return {
-      maxNumberOfInput,
-    };
   },
 });
 </script>

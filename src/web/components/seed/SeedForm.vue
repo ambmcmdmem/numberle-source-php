@@ -8,9 +8,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import axios from 'axios';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
+import { apiCheckDigit } from '../../../module/numberleConfig';
 import Validation from '../../../module/Validation';
+import { apiOrigin } from '../../../server/module/apiInformation';
 
 export default defineComponent({
   setup() {
