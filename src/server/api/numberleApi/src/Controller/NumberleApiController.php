@@ -9,7 +9,6 @@ namespace App\Controller;
  *
  * @method \App\Model\Entity\NumberleApi[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-
 class NumberleApiController extends AppController
 {
     public function initialize(): void
