@@ -94,7 +94,7 @@ export default defineComponent({
               })
             )
             .then((response): void => {
-              nowStatusOfProposedSolutions.value = response.data;
+              nowStatusOfProposedSolutions.value = response.data.collation;
 
               if (
                 IsProposedSolutionCorrect.value ||
@@ -106,7 +106,10 @@ export default defineComponent({
                     new URLSearchParams(parametersAboutSeed.value)
                   )
                   .then((response): void =>
-                    emitter.emit('correctAnswerIsSent', String(response.data))
+                    emitter.emit(
+                      'correctAnswerIsSent',
+                      String(response.data.answer)
+                    )
                   )
                   .catch((error): void => console.log(error));
               } else {

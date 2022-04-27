@@ -418,4 +418,8 @@ return [
     'Session' => [
         'defaults' => 'php',
     ],
+
+    'Cors' => [
+        'AllowOrigin' => ['http://localhost:3000']
+    ]
 ];
