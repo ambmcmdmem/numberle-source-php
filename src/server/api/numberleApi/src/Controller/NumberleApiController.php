@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -18,9 +19,18 @@ class NumberleApiController extends AppController
 
     public function answer()
     {
-        $this->loadComponent('Collation');
+        $this->loadComponent('Numberle', [
+            'seed' => 2
+        ]);
+        $this->loadComponent('Collation', [
+            'answer' => $this->Numberle->getAnswer()
+        ]);
         $this->viewBuilder()->setClassName('Json');
-        $this->set('samples', $this->Collation->statusOfProposedSolution('aiueo', 'ofuea'));
+        $this->set('samples', [
+            $this->Collation->statusOfProposedSolution('12345'),
+            '12345',
+            $this->Numberle->getAnswer()
+        ]);
         $this->set('_serialize', ['samples']);
     }
 }
