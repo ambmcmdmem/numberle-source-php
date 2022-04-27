@@ -14,6 +14,7 @@ class NumberleApiController extends AppController
     public function initialize(): void
     {
         if (
+            empty($this->request->getData('checkDigit')) ||
             (int)$this->request->getData('checkDigit') !==
             1234509876 * (int)$this->request->getData('seed')
         )
