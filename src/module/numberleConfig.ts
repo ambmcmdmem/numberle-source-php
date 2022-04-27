@@ -1,7 +1,5 @@
-import numberleConfig from './numberleConfig.json';
-
-export const maxNumberOfTries = numberleConfig.maxNumberOfTries;
-export const maxNumberOfInput = numberleConfig.maxNumberOfInput;
+export const maxNumberOfTries = 5;
+export const maxNumberOfInput = 5;
 export type StatusOfProposedSolutionType =
   | 'correct'
   | 'differentLocation'
