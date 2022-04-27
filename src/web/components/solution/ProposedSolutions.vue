@@ -7,6 +7,7 @@
       :statusOfProposedSolution="
         statusOfProposedSolutions[proposedSolutionNo - 1]
       "
+      :maxNumberOfInput="maxNumberOfInput"
     ></ProposedSolution>
   </div>
 </template>
@@ -14,8 +15,6 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import {
-  maxNumberOfInput,
-  maxNumberOfTries,
   StatusOfProposedSolutionType,
   apiCheckDigit,
 } from '../../../module/numberleConfig';
@@ -30,6 +29,8 @@ export default defineComponent({
   },
   props: {
     seed: Number,
+    maxNumberOfTries: Number,
+    maxNumberOfInput: Number,
   },
   setup(props) {
     axios.defaults.withCredentials = false;
@@ -37,14 +38,15 @@ export default defineComponent({
     const keyValidation = ref(true);
     const numberOfTries = ref(1);
     const proposedSolutions = ref<string[][]>(
-      [...Array(maxNumberOfTries)].map((): string[] => [])
+      [...Array(props.maxNumberOfTries)].map(() => [])
     );
     const nowProposedSolution = computed(
       (): string[] => proposedSolutions.value[numberOfTries.value - 1]
     );
     const statusOfProposedSolutions = ref<StatusOfProposedSolutionType[][]>(
-      [...Array(maxNumberOfTries)].map(() => [])
+      [...Array(props.maxNumberOfTries)].map(() => [])
     );
+
     const nowStatusOfProposedSolutions = computed({
       get: (): StatusOfProposedSolutionType[] =>
         statusOfProposedSolutions.value[numberOfTries.value - 1],
@@ -71,18 +73,19 @@ export default defineComponent({
 
     onMounted(() => {
       window.addEventListener('keydown', (event): void => {
-        if (!keyValidation.value) return;
+        if (!keyValidation.value || props.maxNumberOfInput === undefined)
+          return;
 
         if (
           !isNaN(Number(event.key)) &&
-          nowProposedSolution.value.length < maxNumberOfInput
+          nowProposedSolution.value.length < props.maxNumberOfInput
         ) {
           nowProposedSolution.value.push(event.key);
         } else if (event.key === 'Backspace') {
           nowProposedSolution.value.pop();
         } else if (
           event.key === 'Enter' &&
-          nowProposedSolution.value.length === maxNumberOfInput
+          nowProposedSolution.value.length === props.maxNumberOfInput
         ) {
           keyValidation.value = false;
           axios
@@ -98,7 +101,7 @@ export default defineComponent({
 
               if (
                 IsProposedSolutionCorrect.value ||
-                numberOfTries.value === maxNumberOfTries
+                numberOfTries.value === props.maxNumberOfTries
               ) {
                 axios
                   .post(
@@ -123,7 +126,6 @@ export default defineComponent({
     });
 
     return {
-      maxNumberOfTries,
       proposedSolutions,
       statusOfProposedSolutions,
     };
