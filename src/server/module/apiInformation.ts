@@ -1,1 +1,1 @@
-export const apiOrigin = `http://localhost:8765/numberleApi`;
+export const apiOrigin = `https://numberle-php.herokuapp.com/numberleApi`;
