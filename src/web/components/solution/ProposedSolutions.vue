@@ -87,7 +87,7 @@ export default defineComponent({
           keyValidation.value = false;
           axios
             .post(
-              `${apiOrigin}/collation`,
+              `${apiOrigin}/numberleApi/collation`,
               new URLSearchParams({
                 ...parametersAboutSeed.value,
                 ...{ proposedSolution: nowProposedSolution.value.join('') },
@@ -102,7 +102,7 @@ export default defineComponent({
               ) {
                 axios
                   .post(
-                    `${apiOrigin}/answer`,
+                    `${apiOrigin}/numberleApi/answer`,
                     new URLSearchParams(parametersAboutSeed.value)
                   )
                   .then((response): void =>
