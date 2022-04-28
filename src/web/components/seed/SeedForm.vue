@@ -1,6 +1,8 @@
 <template>
   <div class="text-center toCenter">
-    <div class="mb-1">シード値(0以上の整数)を入力してください。</div>
+    <div class="mb-1">
+      シード値(0より大きい1000以下の整数)を入力してください。
+    </div>
     <span v-if="seedError && isInput" class="error">{{ seedError }}</span>
     <input type="number" v-model="seed" min="1" @input="isInput = true" />
     <button class="mt-3" type="button" @click="sendSeed">SUBMIT</button>
@@ -8,12 +10,9 @@
 </template>
 
 <script lang="ts">
-import axios from 'axios';
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
-import { apiCheckDigit } from '../../../module/numberleConfig';
 import Validation from '../../../module/Validation';
-import { apiOrigin } from '../../../server/module/apiInformation';
 
 export default defineComponent({
   setup() {
@@ -22,8 +21,11 @@ export default defineComponent({
     const validation = new Validation<string>()
       .next(() => String(seed.value).length > 0, 'シード値を入力してください。')
       .next(
-        () => Number.isInteger(seed.value) && Number(seed.value) > 0,
-        'シード値は0より大きい整数としてください。'
+        () =>
+          Number.isInteger(seed.value) &&
+          Number(seed.value) > 0 &&
+          Number(seed.value) <= 1000,
+        'シード値は0より大きく、1000以下の整数としてください。'
       );
     const seedError = computed((): string => validation.result(''));
 
