@@ -10,9 +10,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import axios from 'axios';
+import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
+import { apiCheckDigit } from '../../../module/numberleConfig';
 import Validation from '../../../module/Validation';
+import { apiUrl } from '../../../server/module/apiInformation';
 
 export default defineComponent({
   setup() {
@@ -35,7 +38,23 @@ export default defineComponent({
         return;
       }
 
-      emitter.emit('seedIsSet', seed.value);
+      axios
+        .post(
+          `${apiUrl}/validateSeed`,
+          new URLSearchParams({
+            seed: String(seed.value),
+            checkDigit: String(apiCheckDigit(seed.value)),
+          })
+        )
+        .then((response) => {
+          if (!response.data.seedValid)
+            throw new Error('シードが有効な値でありません。');
+
+          emitter.emit('seedIsSet', Number(seed.value));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
 
     return {
