@@ -10,9 +10,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import axios from 'axios';
+import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
 import Validation from '../../../module/Validation';
+import { apiUrl } from '../../../server/module/apiInformation';
 
 export default defineComponent({
   setup() {
@@ -30,12 +32,30 @@ export default defineComponent({
     const seedError = computed((): string => validation.result(''));
 
     const sendSeed = (): void => {
-      if (seedError.value || typeof seed.value !== 'number') {
+      if (seedError.value) {
         isInput.value = true;
         return;
       }
 
-      emitter.emit('seedIsSet', seed.value);
+      axios
+        .post(
+          `${apiUrl}/validateSeed`,
+          new URLSearchParams({
+            seed: String(seed.value),
+          })
+        )
+        .then((response) => {
+          if (!response.data.seedValid)
+            throw new Error('シードが有効な値でありません。');
+          else if (typeof seed.value !== 'number') {
+            throw new Error('シードが有効な型でありません。');
+          }
+
+          emitter.emit('seedIsSet', seed.value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
 
     return {
