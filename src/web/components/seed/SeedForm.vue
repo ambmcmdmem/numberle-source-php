@@ -13,6 +13,7 @@
 import axios from 'axios';
 import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
+import { apiCheckDigit } from '../../../module/numberleConfig';
 import Validation from '../../../module/Validation';
 import { apiUrl } from '../../../server/module/apiInformation';
 
@@ -32,7 +33,7 @@ export default defineComponent({
     const seedError = computed((): string => validation.result(''));
 
     const sendSeed = (): void => {
-      if (seedError.value) {
+      if (seedError.value || typeof seed.value !== 'number') {
         isInput.value = true;
         return;
       }
@@ -42,16 +43,14 @@ export default defineComponent({
           `${apiUrl}/validateSeed`,
           new URLSearchParams({
             seed: String(seed.value),
+            checkDigit: String(apiCheckDigit(seed.value)),
           })
         )
         .then((response) => {
           if (!response.data.seedValid)
             throw new Error('シードが有効な値でありません。');
-          else if (typeof seed.value !== 'number') {
-            throw new Error('シードが有効な型でありません。');
-          }
 
-          emitter.emit('seedIsSet', seed.value);
+          emitter.emit('seedIsSet', Number(seed.value));
         })
         .catch((error) => {
           console.log(error);
