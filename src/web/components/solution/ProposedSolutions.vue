@@ -21,7 +21,7 @@ import {
 import ProposedSolution from './ProposedSolution.vue';
 import axios from 'axios';
 import { emitter } from '../../../module/emitter';
-import { apiOrigin } from '../../../server/module/apiInformation';
+import { apiUrl } from '../../../server/module/apiInformation';
 
 export default defineComponent({
   components: {
@@ -90,7 +90,7 @@ export default defineComponent({
           keyValidation.value = false;
           axios
             .post(
-              `${apiOrigin}/numberleApi/collation`,
+              `${apiUrl}/collation`,
               new URLSearchParams({
                 ...parametersAboutSeed.value,
                 ...{ proposedSolution: nowProposedSolution.value.join('') },
@@ -105,7 +105,7 @@ export default defineComponent({
               ) {
                 axios
                   .post(
-                    `${apiOrigin}/numberleApi/answer`,
+                    `${apiUrl}/answer`,
                     new URLSearchParams(parametersAboutSeed.value)
                   )
                   .then((response): void =>
