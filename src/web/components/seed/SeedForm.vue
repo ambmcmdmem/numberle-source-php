@@ -23,7 +23,7 @@ import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
 import { apiCheckDigit, seedRange } from '../../../module/numberleConfig';
 import Validation from '../../../module/Validation';
-import { apiUrl } from '../../../server/module/apiInformation';
+import { configApiUrl } from '../../../server/module/apiInformation';
 
 export default defineComponent({
   setup() {
@@ -48,7 +48,7 @@ export default defineComponent({
 
       axios
         .post(
-          `${apiUrl}/validateSeed`,
+          `${configApiUrl}`,
           new URLSearchParams({
             seed: String(seed.value),
             checkDigit: String(apiCheckDigit(seed.value)),
