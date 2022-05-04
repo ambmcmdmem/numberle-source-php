@@ -56,7 +56,7 @@ export default defineComponent({
         (statusOfProposedSolutions.value[numberOfTries.value - 1] =
           givenStatusOfProposedSolutions),
     });
-    const IsProposedSolutionCorrect = computed((): boolean =>
+    const isProposedSolutionCorrect = computed((): boolean =>
       nowStatusOfProposedSolutions.value.every(
         (statusOfProposedSolution): boolean =>
           statusOfProposedSolution === 'correct'
@@ -100,13 +100,20 @@ export default defineComponent({
               nowStatusOfProposedSolutions.value = response.data.collation;
 
               if (
-                IsProposedSolutionCorrect.value ||
+                isProposedSolutionCorrect.value ||
                 numberOfTries.value === props.maxNumberOfTries
               ) {
                 axios
                   .post(
                     `${apiUrl}/answer`,
-                    new URLSearchParams(parametersAboutSeed.value)
+                    new URLSearchParams({
+                      ...parametersAboutSeed.value,
+                      ...{
+                        numberOfTries: isProposedSolutionCorrect.value
+                          ? String(numberOfTries.value)
+                          : '-1',
+                      },
+                    })
                   )
                   .then((response): void =>
                     emitter.emit(
