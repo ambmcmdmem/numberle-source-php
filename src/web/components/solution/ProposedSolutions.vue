@@ -56,7 +56,7 @@ export default defineComponent({
         (statusOfProposedSolutions.value[numberOfTries.value - 1] =
           givenStatusOfProposedSolutions),
     });
-    const IsProposedSolutionCorrect = computed((): boolean =>
+    const isProposedSolutionCorrect = computed((): boolean =>
       nowStatusOfProposedSolutions.value.every(
         (statusOfProposedSolution): boolean =>
           statusOfProposedSolution === 'correct'
@@ -64,12 +64,16 @@ export default defineComponent({
     );
     const parametersAboutSeed = computed(() => {
       if (props.seed === undefined)
-        throw new Error('シード入力後ですがシードが空です。');
+        throw new Error('シード入力済みですがシードが空です。');
       return {
         seed: String(props.seed),
         checkDigit: String(apiCheckDigit(props.seed)),
       };
     });
+
+    const numberOfTriesWhenCleared = computed((): number =>
+      isProposedSolutionCorrect.value ? numberOfTries.value : 0
+    );
 
     onMounted(() => {
       window.addEventListener('keydown', (event): void => {
@@ -100,20 +104,26 @@ export default defineComponent({
               nowStatusOfProposedSolutions.value = response.data.collation;
 
               if (
-                IsProposedSolutionCorrect.value ||
+                isProposedSolutionCorrect.value ||
                 numberOfTries.value === props.maxNumberOfTries
               ) {
                 axios
                   .post(
                     `${apiUrl}/answer`,
-                    new URLSearchParams(parametersAboutSeed.value)
+                    new URLSearchParams({
+                      ...parametersAboutSeed.value,
+                      ...{
+                        numberOfTries: String(numberOfTriesWhenCleared.value),
+                      },
+                    })
                   )
-                  .then((response): void =>
+                  .then((response): void => {
                     emitter.emit(
                       'correctAnswerIsSent',
                       String(response.data.answer)
-                    )
-                  )
+                    );
+                    emitter.emit('appIsClosed', numberOfTriesWhenCleared.value);
+                  })
                   .catch((error): void => console.log(error));
               } else {
                 numberOfTries.value++;

@@ -7,5 +7,6 @@ type EventsType = {
     maxNumberOfTries: number;
     maxNumberOfInput: number;
   };
+  appIsClosed: number;
 };
 export const emitter = mitt<EventsType>();
