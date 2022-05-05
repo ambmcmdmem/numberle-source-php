@@ -13,8 +13,14 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
-    character: String,
-    statusOfCharacter: String,
+    character: {
+      type: String,
+      required: true,
+    },
+    statusOfCharacter: {
+      type: String,
+      required: true,
+    },
   },
   setup() {},
 });

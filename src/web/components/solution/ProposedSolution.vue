@@ -16,9 +16,18 @@ import { StatusOfProposedSolutionType } from '../../../module/numberleConfig';
 
 export default defineComponent({
   props: {
-    proposedSolution: Array as PropType<string[]>,
-    statusOfProposedSolution: Array as PropType<StatusOfProposedSolutionType[]>,
-    maxNumberOfInput: Number,
+    proposedSolution: {
+      type: Array as PropType<string[]>,
+      required: true,
+    },
+    statusOfProposedSolution: {
+      type: Array as PropType<StatusOfProposedSolutionType[]>,
+      required: true,
+    },
+    maxNumberOfInput: {
+      type: Number,
+      required: true,
+    },
   },
   components: {
     Character,
