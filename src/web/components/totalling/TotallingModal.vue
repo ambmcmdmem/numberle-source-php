@@ -1,5 +1,5 @@
 <template>
-  <div v-if="totalling.length">
+  <div v-if="totallingForDisplay.length">
     <transition name="modal" appear>
       <div
         v-if="doesShowModal"
@@ -32,27 +32,19 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="partOfTotalling in totalling"
+                    v-for="partOfTotalling in totallingForDisplay"
                     :key="`partOfTotalling-${partOfTotalling.count}`"
                   >
                     <td
                       :class="{
-                        'font-weight-bold':
-                          numberOfTriesWhenCleared ===
-                          partOfTotalling.numberOfTries,
+                        'font-weight-bold': partOfTotalling.doIInclude,
                       }"
                     >
-                      {{
-                        partOfTotalling.numberOfTries
-                          ? partOfTotalling.numberOfTries
-                          : '未クリア'
-                      }}
+                      {{ partOfTotalling.title }}
                     </td>
                     <td
                       :class="{
-                        'font-weight-bold':
-                          numberOfTriesWhenCleared ===
-                          partOfTotalling.numberOfTries,
+                        'font-weight-bold': partOfTotalling.doIInclude,
                       }"
                     >
                       {{ partOfTotalling.count }}
@@ -70,9 +62,13 @@
 
 <script lang="ts">
 import axios from 'axios';
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
-import { apiCheckDigit, totallingType } from '../../../module/numberleConfig';
+import {
+  apiCheckDigit,
+  totallingType,
+  totallingForDisplayType,
+} from '../../../module/numberleConfig';
 import { apiUrl } from '../../../server/module/apiInformation';
 
 export default defineComponent({
@@ -85,11 +81,25 @@ export default defineComponent({
     const doesShowModal = ref(true);
     const numberOfTriesWhenCleared = ref(0);
 
+    const totallingForDisplay = computed((): totallingForDisplayType[] =>
+      totalling.value.map(
+        (partOfTotalling): totallingForDisplayType => ({
+          title: partOfTotalling.numberOfTries
+            ? partOfTotalling.numberOfTries
+            : '未クリア',
+          count: partOfTotalling.count,
+          doIInclude:
+            partOfTotalling.numberOfTries === numberOfTriesWhenCleared.value,
+        })
+      )
+    );
+
     emitter.on('appIsClosed', (givenNumberOfTriesWhenCleared): void => {
       if (props.seed === undefined)
         throw new Error('シード入力済みですがシードが空です。');
 
       numberOfTriesWhenCleared.value = givenNumberOfTriesWhenCleared;
+
       axios
         .post(
           `${apiUrl}/totalling`,
@@ -117,7 +127,7 @@ export default defineComponent({
     });
 
     return {
-      totalling,
+      totallingForDisplay,
       doesShowModal,
       numberOfTriesWhenCleared,
     };
