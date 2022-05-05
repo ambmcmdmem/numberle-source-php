@@ -32,19 +32,21 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="partOfTotalling in totallingForDisplay"
-                    :key="`partOfTotalling-${partOfTotalling.count}`"
+                    v-for="(
+                      partOfTotalling, partOfTotallingNo
+                    ) in totallingForDisplay"
+                    :key="`partOfTotalling-${partOfTotallingNo}`"
                   >
                     <td
                       :class="{
-                        'font-weight-bold': partOfTotalling.doIInclude,
+                        'font-weight-bold': partOfTotalling.isResultOfThisTime,
                       }"
                     >
                       {{ partOfTotalling.title }}
                     </td>
                     <td
                       :class="{
-                        'font-weight-bold': partOfTotalling.doIInclude,
+                        'font-weight-bold': partOfTotalling.isResultOfThisTime,
                       }"
                     >
                       {{ partOfTotalling.count }}
@@ -64,12 +66,18 @@
 import axios from 'axios';
 import { computed, defineComponent, ref } from 'vue';
 import { emitter } from '../../../module/emitter';
-import {
-  apiCheckDigit,
-  totallingType,
-  totallingForDisplayType,
-} from '../../../module/numberleConfig';
+import { apiCheckDigit } from '../../../module/numberleConfig';
 import { apiUrl } from '../../../server/module/apiInformation';
+
+type totallingType = {
+  count: number;
+  numberOfTries: number;
+};
+type totallingForDisplayType = {
+  isResultOfThisTime: boolean;
+  title: number | '未クリア';
+  count: number;
+};
 
 export default defineComponent({
   props: {
@@ -85,7 +93,7 @@ export default defineComponent({
   setup(props) {
     const totalling = ref<totallingType[]>([]);
     const doesShowModal = ref(true);
-    const numberOfTriesWhenCleared = ref(0);
+    const numberOfProposedSolutionsInThisTime = ref(0);
 
     const totallingForDisplay = computed((): totallingForDisplayType[] =>
       totalling.value.map(
@@ -94,42 +102,46 @@ export default defineComponent({
             ? partOfTotalling.numberOfTries
             : '未クリア',
           count: partOfTotalling.count,
-          doIInclude:
-            partOfTotalling.numberOfTries === numberOfTriesWhenCleared.value,
+          isResultOfThisTime:
+            partOfTotalling.numberOfTries ===
+            numberOfProposedSolutionsInThisTime.value,
         })
       )
     );
 
-    emitter.on('appIsClosed', (givenNumberOfTriesWhenCleared): void => {
-      numberOfTriesWhenCleared.value = givenNumberOfTriesWhenCleared;
+    emitter.on(
+      'appIsClosed',
+      (givenNumberOfProposedSolutionsInThisTime): void => {
+        numberOfProposedSolutionsInThisTime.value =
+          givenNumberOfProposedSolutionsInThisTime;
 
-      axios
-        .post(
-          `${apiUrl}/totalling`,
-          new URLSearchParams({
-            seed: String(props.seed),
-            checkDigit: String(apiCheckDigit(props.seed)),
+        axios
+          .post(
+            `${apiUrl}/totalling`,
+            new URLSearchParams({
+              seed: String(props.seed),
+              checkDigit: String(apiCheckDigit(props.seed)),
+            })
+          )
+          .then((response) => {
+            totalling.value = [...Array(props.maxNumberOfTries + 1).keys()].map(
+              (numberOfTries): totallingType =>
+                response.data.totalling.find(
+                  (partOfTotalling: totallingType): boolean =>
+                    partOfTotalling.numberOfTries === numberOfTries
+                ) ?? {
+                  numberOfTries,
+                  count: 0,
+                }
+            );
           })
-        )
-        .then((response) => {
-          totalling.value = [...Array(props.maxNumberOfTries + 1).keys()].map(
-            (numberOfTries): totallingType =>
-              response.data.totalling.find(
-                (partOfTotalling: totallingType): boolean =>
-                  partOfTotalling.numberOfTries === numberOfTries
-              ) ?? {
-                numberOfTries,
-                count: 0,
-              }
-          );
-        })
-        .catch((error) => console.log(error));
-    });
+          .catch((error) => console.log(error));
+      }
+    );
 
     return {
       totallingForDisplay,
       doesShowModal,
-      numberOfTriesWhenCleared,
     };
   },
 });
