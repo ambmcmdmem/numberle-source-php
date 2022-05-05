@@ -71,12 +71,15 @@ export default defineComponent({
           statusOfProposedSolution === 'correct'
       )
     );
-    const parametersAboutSeed = computed(() => {
-      return {
+    const parametersAboutSeed = computed(
+      (): {
+        seed: string;
+        checkDigit: string;
+      } => ({
         seed: String(props.seed),
         checkDigit: String(apiCheckDigit(props.seed)),
-      };
-    });
+      })
+    );
 
     const numberOfTriesWhenCleared = computed((): number =>
       isProposedSolutionCorrect.value ? numberOfTries.value : 0
