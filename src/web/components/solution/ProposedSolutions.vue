@@ -64,12 +64,16 @@ export default defineComponent({
     );
     const parametersAboutSeed = computed(() => {
       if (props.seed === undefined)
-        throw new Error('シード入力後ですがシードが空です。');
+        throw new Error('シード入力済みですがシードが空です。');
       return {
         seed: String(props.seed),
         checkDigit: String(apiCheckDigit(props.seed)),
       };
     });
+
+    const numberOfTriesWhenCleared = computed((): number =>
+      isProposedSolutionCorrect.value ? numberOfTries.value : 0
+    );
 
     onMounted(() => {
       window.addEventListener('keydown', (event): void => {
@@ -109,18 +113,17 @@ export default defineComponent({
                     new URLSearchParams({
                       ...parametersAboutSeed.value,
                       ...{
-                        numberOfTries: isProposedSolutionCorrect.value
-                          ? String(numberOfTries.value)
-                          : '-1',
+                        numberOfTries: String(numberOfTriesWhenCleared.value),
                       },
                     })
                   )
-                  .then((response): void =>
+                  .then((response): void => {
                     emitter.emit(
                       'correctAnswerIsSent',
                       String(response.data.answer)
-                    )
-                  )
+                    );
+                    emitter.emit('appIsClosed', numberOfTriesWhenCleared.value);
+                  })
                   .catch((error): void => console.log(error));
               } else {
                 numberOfTries.value++;

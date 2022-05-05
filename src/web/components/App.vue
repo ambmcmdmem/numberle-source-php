@@ -7,6 +7,10 @@
         :maxNumberOfTries="maxNumberOfTries"
         :maxNumberOfInput="maxNumberOfInput"
       ></ProposedSolutions>
+      <TotallingModal
+        :seed="seed"
+        :maxNumberOfTries="maxNumberOfTries"
+      ></TotallingModal>
       <CorrectAnswer></CorrectAnswer>
     </template>
   </div>
@@ -15,6 +19,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import SeedForm from './seed/SeedForm.vue';
+import TotallingModal from './totalling/TotallingModal.vue';
 import ProposedSolutions from './solution/ProposedSolutions.vue';
 import CorrectAnswer from './answer/CorrectAnswer.vue';
 import { emitter } from '../../module/emitter';
@@ -26,6 +31,7 @@ export default defineComponent({
     SeedForm,
     ProposedSolutions,
     CorrectAnswer,
+    TotallingModal,
   },
   setup() {
     const seed = ref<number | null>(null);
