@@ -11,3 +11,8 @@ export type totallingType = {
   count: number;
   numberOfTries: number;
 };
+export type totallingForDisplayType = {
+  doIInclude: boolean;
+  title: number | '未クリア';
+  count: number;
+};
