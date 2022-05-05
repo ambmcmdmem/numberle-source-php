@@ -73,8 +73,14 @@ import { apiUrl } from '../../../server/module/apiInformation';
 
 export default defineComponent({
   props: {
-    seed: Number,
-    maxNumberOfTries: Number,
+    seed: {
+      type: Number,
+      required: true,
+    },
+    maxNumberOfTries: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props) {
     const totalling = ref<totallingType[]>([]);
@@ -95,9 +101,6 @@ export default defineComponent({
     );
 
     emitter.on('appIsClosed', (givenNumberOfTriesWhenCleared): void => {
-      if (props.seed === undefined)
-        throw new Error('シード入力済みですがシードが空です。');
-
       numberOfTriesWhenCleared.value = givenNumberOfTriesWhenCleared;
 
       axios
@@ -109,9 +112,6 @@ export default defineComponent({
           })
         )
         .then((response) => {
-          if (props.maxNumberOfTries === undefined)
-            throw new Error('最大入力回数の値が空です。');
-
           totalling.value = [...Array(props.maxNumberOfTries + 1).keys()].map(
             (numberOfTries): totallingType =>
               response.data.totalling.find(

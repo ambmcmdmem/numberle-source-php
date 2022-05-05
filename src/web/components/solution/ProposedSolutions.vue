@@ -28,9 +28,18 @@ export default defineComponent({
     ProposedSolution,
   },
   props: {
-    seed: Number,
-    maxNumberOfTries: Number,
-    maxNumberOfInput: Number,
+    seed: {
+      type: Number,
+      required: true,
+    },
+    maxNumberOfTries: {
+      type: Number,
+      required: true,
+    },
+    maxNumberOfInput: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props) {
     axios.defaults.withCredentials = false;
@@ -63,8 +72,6 @@ export default defineComponent({
       )
     );
     const parametersAboutSeed = computed(() => {
-      if (props.seed === undefined)
-        throw new Error('シード入力済みですがシードが空です。');
       return {
         seed: String(props.seed),
         checkDigit: String(apiCheckDigit(props.seed)),
@@ -77,8 +84,7 @@ export default defineComponent({
 
     onMounted(() => {
       window.addEventListener('keydown', (event): void => {
-        if (!keyValidation.value || props.maxNumberOfInput === undefined)
-          return;
+        if (!keyValidation.value) return;
 
         if (
           !isNaN(Number(event.key)) &&
