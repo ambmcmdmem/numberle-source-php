@@ -33,23 +33,23 @@
                 <tbody>
                   <tr
                     v-for="(
-                      partOfTotalling, partOfTotallingNo
+                      oneOfTotalling, oneOfTotallingNo
                     ) in totallingForDisplay"
-                    :key="`partOfTotalling-${partOfTotallingNo}`"
+                    :key="`oneOfTotalling-${oneOfTotallingNo}`"
                   >
                     <td
                       :class="{
-                        'font-weight-bold': partOfTotalling.isResultOfThisTime,
+                        'font-weight-bold': oneOfTotalling.isResultOfThisTime,
                       }"
                     >
-                      {{ partOfTotalling.title }}
+                      {{ oneOfTotalling.title }}
                     </td>
                     <td
                       :class="{
-                        'font-weight-bold': partOfTotalling.isResultOfThisTime,
+                        'font-weight-bold': oneOfTotalling.isResultOfThisTime,
                       }"
                     >
-                      {{ partOfTotalling.count }}
+                      {{ oneOfTotalling.count }}
                     </td>
                   </tr>
                 </tbody>
@@ -93,51 +93,46 @@ export default defineComponent({
   setup(props) {
     const totalling = ref<totallingType[]>([]);
     const doesShowModal = ref(true);
-    const numberOfProposedSolutionsInThisTime = ref(0);
+    const resultOfThisTime = ref(0);
 
     const totallingForDisplay = computed((): totallingForDisplayType[] =>
       totalling.value.map(
-        (partOfTotalling): totallingForDisplayType => ({
-          title: partOfTotalling.numberOfTries
-            ? partOfTotalling.numberOfTries
+        (oneOfTotalling): totallingForDisplayType => ({
+          title: oneOfTotalling.numberOfTries
+            ? oneOfTotalling.numberOfTries
             : '未クリア',
-          count: partOfTotalling.count,
+          count: oneOfTotalling.count,
           isResultOfThisTime:
-            partOfTotalling.numberOfTries ===
-            numberOfProposedSolutionsInThisTime.value,
+            oneOfTotalling.numberOfTries === resultOfThisTime.value,
         })
       )
     );
 
-    emitter.on(
-      'appIsClosed',
-      (givenNumberOfProposedSolutionsInThisTime): void => {
-        numberOfProposedSolutionsInThisTime.value =
-          givenNumberOfProposedSolutionsInThisTime;
+    emitter.on('appIsClosed', (givenResultOfThisTime): void => {
+      resultOfThisTime.value = givenResultOfThisTime;
 
-        axios
-          .post(
-            `${apiUrl}/totalling`,
-            new URLSearchParams({
-              seed: String(props.seed),
-              checkDigit: String(apiCheckDigit(props.seed)),
-            })
-          )
-          .then((response) => {
-            totalling.value = [...Array(props.maxNumberOfTries + 1).keys()].map(
-              (numberOfTries): totallingType =>
-                response.data.totalling.find(
-                  (partOfTotalling: totallingType): boolean =>
-                    partOfTotalling.numberOfTries === numberOfTries
-                ) ?? {
-                  numberOfTries,
-                  count: 0,
-                }
-            );
+      axios
+        .post(
+          `${apiUrl}/totalling`,
+          new URLSearchParams({
+            seed: String(props.seed),
+            checkDigit: String(apiCheckDigit(props.seed)),
           })
-          .catch((error) => console.log(error));
-      }
-    );
+        )
+        .then((response) => {
+          totalling.value = [...Array(props.maxNumberOfTries + 1).keys()].map(
+            (numberOfTries): totallingType =>
+              response.data.totalling.find(
+                (oneOfTotalling: totallingType): boolean =>
+                  oneOfTotalling.numberOfTries === numberOfTries
+              ) ?? {
+                numberOfTries,
+                count: 0,
+              }
+          );
+        })
+        .catch((error) => console.log(error));
+    });
 
     return {
       totallingForDisplay,
