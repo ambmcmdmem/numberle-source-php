@@ -1,5 +1,5 @@
 <template>
-  <div v-if="totallingForDisplay.length">
+  <div v-if="totalsForDisplay.length">
     <transition name="modal" appear>
       <div
         v-if="doesShowModal"
@@ -33,23 +33,23 @@
                 <tbody>
                   <tr
                     v-for="(
-                      oneOfTotalling, oneOfTotallingNo
-                    ) in totallingForDisplay"
-                    :key="`oneOfTotalling-${oneOfTotallingNo}`"
+                      totalForDisplay, totalForDisplayNo
+                    ) in totalsForDisplay"
+                    :key="`total-${totalForDisplayNo}`"
                   >
                     <td
                       :class="{
-                        'font-weight-bold': oneOfTotalling.isResultOfThisTime,
+                        'font-weight-bold': totalForDisplay.isResultOfThisTime,
                       }"
                     >
-                      {{ oneOfTotalling.title }}
+                      {{ totalForDisplay.title }}
                     </td>
                     <td
                       :class="{
-                        'font-weight-bold': oneOfTotalling.isResultOfThisTime,
+                        'font-weight-bold': totalForDisplay.isResultOfThisTime,
                       }"
                     >
-                      {{ oneOfTotalling.count }}
+                      {{ totalForDisplay.count }}
                     </td>
                   </tr>
                 </tbody>
@@ -69,11 +69,11 @@ import { emitter } from '../../../module/emitter';
 import { apiCheckDigit } from '../../../module/numberleConfig';
 import { apiUrl } from '../../../server/module/apiInformation';
 
-type totallingType = {
+type totalType = {
   count: number;
   numberOfTries: number;
 };
-type totallingForDisplayType = {
+type totalForDisplayType = {
   isResultOfThisTime: boolean;
   title: number | '未クリア';
   count: number;
@@ -91,19 +91,16 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const totalling = ref<totallingType[]>([]);
+    const totals = ref<totalType[]>([]);
     const doesShowModal = ref(true);
     const resultOfThisTime = ref(0);
 
-    const totallingForDisplay = computed((): totallingForDisplayType[] =>
-      totalling.value.map(
-        (oneOfTotalling): totallingForDisplayType => ({
-          title: oneOfTotalling.numberOfTries
-            ? oneOfTotalling.numberOfTries
-            : '未クリア',
-          count: oneOfTotalling.count,
-          isResultOfThisTime:
-            oneOfTotalling.numberOfTries === resultOfThisTime.value,
+    const totalsForDisplay = computed((): totalForDisplayType[] =>
+      totals.value.map(
+        (total): totalForDisplayType => ({
+          title: total.numberOfTries ? total.numberOfTries : '未クリア',
+          count: total.count,
+          isResultOfThisTime: total.numberOfTries === resultOfThisTime.value,
         })
       )
     );
@@ -113,18 +110,18 @@ export default defineComponent({
 
       axios
         .post(
-          `${apiUrl}/totalling`,
+          `${apiUrl}/totals`,
           new URLSearchParams({
             seed: String(props.seed),
             checkDigit: String(apiCheckDigit(props.seed)),
           })
         )
         .then((response) => {
-          totalling.value = [...Array(props.maxNumberOfTries + 1).keys()].map(
-            (numberOfTries): totallingType =>
-              response.data.totalling.find(
-                (oneOfTotalling: totallingType): boolean =>
-                  oneOfTotalling.numberOfTries === numberOfTries
+          totals.value = [...Array(props.maxNumberOfTries + 1).keys()].map(
+            (numberOfTries): totalType =>
+              response.data.totals.find(
+                (total: totalType): boolean =>
+                  total.numberOfTries === numberOfTries
               ) ?? {
                 numberOfTries,
                 count: 0,
@@ -135,7 +132,7 @@ export default defineComponent({
     });
 
     return {
-      totallingForDisplay,
+      totalsForDisplay,
       doesShowModal,
     };
   },
