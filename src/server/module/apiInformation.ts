@@ -1,2 +1,3 @@
-export const configApiUrl = 'http://localhost:8765/numberleConfigApi';
-export const apiUrl = 'http://localhost:8765/numberleApi';
+export const configApiUrl =
+  'https://numberle-php.herokuapp.com/numberleConfigApi';
+export const apiUrl = 'https://numberle-php.herokuapp.com/numberleApi';
